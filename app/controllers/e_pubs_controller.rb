@@ -19,8 +19,7 @@ class EPubsController < ApplicationController
         @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       end
       @feedback_modal = true
-      @feedback_width = 790
-      @feedback_iframe = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScEwuui8uSGPDeyzZDu7YaA9scmnK_Me3o1ElBdjo3Ga7tj1g/viewform?embedded=true#start=embed" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'.html_safe # rubocop:disable Rails/OutputSafety
+      @feedback_iframe = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdjp1THLBXgs8aj3g0jws35ratvO4Pb4bEQS6ABY7AgeJ0xvA/viewform?embedded=true#start=embed" width="870" height="700" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'.html_safe # rubocop:disable Rails/OutputSafety
       render layout: false
     else
       Rails.logger.info("EPubsController.show(#{params[:id]}) is not an EPub.")

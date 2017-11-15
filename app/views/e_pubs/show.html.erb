@@ -12,15 +12,52 @@
   <% if @feedback_modal %>
       <!-- Modal -->
       <div id="feedbackModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" style="width:<%= @feedback_width %>px;">
+        <div class="modal-dialog modal-lg" >
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">User Feedback</h4>
+              <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+              <!--<i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>-->
+              <!--<button type="button" class="button&#45;&#45;sm cozy-close" data-dismiss="modal"><i class="icon-x oi" data-glyph="x" aria-hidden="true"></i></button>-->
+              <!--<button class="button&#45;&#45;sm cozy-close" data-toggle="button" data-slot="label"></button>-->
+              <!--<h4 class="modal-title">title</h4>-->
             </div>
             <div class="modal-body">
-              <%= @feedback_iframe %>
+              <!--<#%= @feedback_iframe %>-->
+              <script type="text/javascript">var submitted=false;</script>
+              <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='http://YOUR-THANK-YOU-PAGE-URL';}"></iframe>
+              <form action="https://docs.google.com/forms/d/e/1FAIpQLScx8Q1wNnp9rvQNzvcW3aOwSacSaGFp9655v-_6-encFyvYgA/formResponse" method="POST" id="ss-form" target="hidden_iframe" autocomplete="on" onsubmit="submitted=true;">
+                <ol role="list" class="ss-question-list" style="padding-left: 0;">
+                  <div class="ss-form-question errorbox-good" role="listitem">
+                    <div dir="auto" class="ss-item  ss-paragraph-text"><div class="ss-form-entry">
+                      <label class="ss-q-item-label" for="entry_420050593"><div class="ss-q-title">Feedback</div>
+                        <div class="ss-q-help ss-secondary-text" dir="auto"></div></label>
+                      <textarea name="entry.420050593" rows="8" cols="0" class="ss-q-long" id="entry_420050593" dir="auto" aria-label="Feedback  "></textarea>
+                      <div class="error-message" id="2049129220_errorMessage"></div>
+                      <div class="required-message">This is a required question</div>
+                    </div>
+                    </div>
+                  </div>
+                  <input type="hidden" name="draftResponse" value="[null,null,&quot;-9026941717055359738&quot;]">
+                  <input type="hidden" name="pageHistory" value="0">
+                  <input type="hidden" name="fbzx" value="-9026941717055359738">
+                  <div class="ss-send-email-receipt" style="margin-bottom: 4px;" dir="ltr">
+                    <label for="emailReceipt" style="display:inline;"></label>
+                  </div>
+                  <div class="ss-item ss-navigate">
+                    <table id="navigation-table">
+                      <tbody>
+                        <tr>
+                          <td class="ss-form-entry goog-inline-block" id="navigation-buttons" dir="ltr">
+                            <input type="submit" name="submit" value="Submit" id="ss-submit" class="jfk-button jfk-button-action ">
+                            <div class="ss-password-warning ss-secondary-text">Never submit passwords through Google Forms.</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ol>
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
