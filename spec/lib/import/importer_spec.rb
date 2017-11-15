@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require 'import'
+require 'export'
 
 describe Import::Importer do
   let(:public_vis) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
@@ -14,7 +15,9 @@ describe Import::Importer do
   let(:importer) { described_class.new(root_dir: root_dir,
                                        user_email: user.email,
                                        press: press.subdomain,
-                                       visibility: public_vis) }
+                                       visibility: public_vis,
+                                       monograph_id: monograph_id) }
+  let(:monograph_id) { '' }
   let(:visibility) { public_vis }
 
   before do
@@ -44,6 +47,54 @@ describe Import::Importer do
 
       it 'is private' do
         expect(importer.visibility).to eq private_vis
+      end
+    end
+  end
+
+  describe '#import' do
+    subject { importer.import(manifest) }
+
+    let(:manifest) { double('manifest') }
+
+    context 'default no monograph' do
+      it { is_expected.to be false }
+    end
+
+    context 'with ldp:gone-ish or monograph not found' do
+      let(:monograph_id) { 'validnoid' }
+      it { expect { subject }.to raise_error(/No monograph found with id '#{monograph_id}'/) }
+    end
+
+    context 'with monograph' do
+      let(:monograph) { build(:monograph, representative_id: cover.id) }
+      let(:cover) { create(:file_set) }
+      let(:file1) { create(:file_set) }
+      let(:file2) { create(:file_set) }
+      let(:expected_manifest) do
+        <<~eos
+          NOID,File Name,Title,Resource Type,Externally Hosted Resource,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,Rights Granted - Creative Commons,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Persistent ID - Display on Platform,Persistent ID - XML for CrossRef,Persistent ID - Handle,Content Type,Primary Creator Last Name,Primary Creator First Name,Primary Creator Role,Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN (hardcover),ISBN (paper),ISBN (ebook),Buy Book URL
+          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
+          #{cover.id},,'New Cover Title',#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,
+          #{file1.id},,#{file1.title.first},#{file1.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,
+          #{file2.id},,#{file2.title.first},#{file2.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,
+          #{monograph.id},://:MONOGRAPH://:,'New Monograph Title',,,,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,
+        eos
+      end
+      let(:monograph_id) { monograph.id }
+      let(:manifest) { expected_manifest }
+
+      before do
+        monograph.ordered_members << cover
+        monograph.ordered_members << file1
+        monograph.ordered_members << file2
+        monograph.save!
+      end
+
+      it do
+        is_expected.to be true
+        monograph.reload
+        actual_manifest = Export::Exporter.new(monograph_id).export
+        expect(actual_manifest).to eq expected_manifest
       end
     end
   end

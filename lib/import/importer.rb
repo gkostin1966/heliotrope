@@ -15,6 +15,7 @@ module Import
       @user_email = user_email
       @reimporting = false
       @reimport_mono = Monograph.where(id: monograph_id).first
+      # @reimport_mono = Monograph.find(monograph_id) if monograph_id.present?
 
       if monograph_id.present?
         raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
@@ -24,6 +25,28 @@ module Import
         @visibility = visibility
         @monograph_title = monograph_title
       end
+    end
+
+    def import(manifest)
+      return false if @reimport_mono.blank?
+      monograph = @reimport_mono
+      rows = CSV.parse(manifest, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
+      # The template CSV file contains an extra row after the
+      # headers that has explanatory text about how to fill in
+      # the table.  We want to throw away that text.
+      rows.delete(0)
+      rows.each do |row|
+        noid = row.field('NOID')
+        if noid == monograph.id
+          monograph.title = [row.field('Title')]
+          monograph.save
+        else
+          asset = FileSet.find(noid)
+          asset.title = [row.field('Title')]
+          asset.save
+        end
+      end
+      true
     end
 
     def run(test = false)
