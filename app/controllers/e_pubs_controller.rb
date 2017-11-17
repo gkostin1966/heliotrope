@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class EPubsController < ApplicationController
-  after_action :allow_feedback_google_form_iframe
-
   def show
     @presenter = Hyrax::FileSetPresenter.new(SolrDocument.new(FileSet.find(params[:id]).to_solr), current_ability, request)
     if @presenter.epub?
@@ -18,9 +16,7 @@ class EPubsController < ApplicationController
       if @presenter.parent.present?
         @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [@presenter.parent.id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       end
-      @feedback_modal = true
-      @feedback_width = 790
-      @feedback_iframe = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScEwuui8uSGPDeyzZDu7YaA9scmnK_Me3o1ElBdjo3Ga7tj1g/viewform?embedded=true#start=embed" width="760" height="500" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'.html_safe # rubocop:disable Rails/OutputSafety
+      @feedback = Feedback.new
       render layout: false
     else
       Rails.logger.info("EPubsController.show(#{params[:id]}) is not an EPub.")
@@ -50,10 +46,4 @@ class EPubsController < ApplicationController
       head :not_found
     end
   end
-
-  private
-
-    def allow_feedback_google_form_iframe
-      response.headers['X-Frame-Options'] = 'https://docs.google.com'
-    end
 end
