@@ -18,4 +18,18 @@ FactoryBot.define do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
   end
+
+  factory :monograph_fake do
+    transient do
+      user { FactoryBot.create(:user) }
+    end
+
+    after(:build) do |work, evaluator|
+      work.apply_depositor_metadata(evaluator.user.user_key)
+    end
+
+    title { Faker::Book.title }
+    press { FactoryBot.create(:press).subdomain }
+    visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+  end
 end

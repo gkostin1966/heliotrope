@@ -133,7 +133,8 @@ group :development, :test do
   # test coverage with coveralls
   gem 'coveralls', require: false
   gem 'factory_bot_rails'
-  gem "fakefs", require: "fakefs/safe"
+  gem 'fakefs', require: 'fakefs/safe'
+  gem 'faker'
   gem 'fcrepo_wrapper', '0.5.2'
   gem 'rails-controller-testing'
   gem 'rspec-context-private'

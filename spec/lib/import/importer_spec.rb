@@ -66,22 +66,32 @@ describe Import::Importer do
     end
 
     context 'with monograph' do
-      let(:monograph) { build(:monograph, representative_id: cover.id) }
+      let(:monograph) { build(:monograph) }
       let(:cover) { create(:file_set) }
-      let(:file1) { create(:file_set, resource_type: ['video']) }
-      let(:file2) { create(:file_set, resource_type: ['image']) }
+      let(:file1) { create(:file_set) }
+      let(:file2) { create(:file_set) }
+      let(:input_manifest) do
+        <<~eos
+          NOID,File Name,Link,Title,Resource Type,Externally Hosted Resource,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,Rights Granted - Creative Commons,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Persistent ID - Display on Platform,Persistent ID - XML for CrossRef,Persistent ID - Handle,Content Type,Primary Creator Last Name,Primary Creator First Name,Primary Creator Role,Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN (hardcover),ISBN (paper),ISBN (ebook),Buy Book URL
+          instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
+          #{cover.id},#{cover.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.sort_date},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.sort_date},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id}
+          #{file1.id},#{file1.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.sort_date},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.sort_date},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id}
+          #{file2.id},#{file2.id},"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.sort_date},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.sort_date},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id}
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},://:MONOGRAPH://:,#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id}
+        eos
+      end
       let(:expected_manifest) do
         <<~eos
           NOID,File Name,Link,Title,Resource Type,Externally Hosted Resource,Caption,Alternative Text,Copyright Holder,Allow High-Res Display?,Allow Download?,Copyright Status,Rights Granted,Rights Granted - Creative Commons,Permissions Expiration Date,After Expiration: Allow Display?,After Expiration: Allow Download?,Credit Line,Holding Contact,Exclusive to Fulcrum,Persistent ID - Display on Platform,Persistent ID - XML for CrossRef,Persistent ID - Handle,Content Type,Primary Creator Last Name,Primary Creator First Name,Primary Creator Role,Additional Creator(s),Sort Date,Display Date,Description,Keywords,Section,Language,Transcript,Translation,Redirect to,Publisher,Subject,ISBN (hardcover),ISBN (paper),ISBN (ebook),Buy Book URL
           instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder,instruction placeholder
-          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",New Cover Title,#{cover.resource_type.first},,,,,,,,,,,,,,,,,,,,,,,,#{cover.sort_date},,,,,,,,,,,,,,
-          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",New Image Title: Split,image,,,,,,,,,,,,,,,,,,,,,,,,#{file1.sort_date},,,,,,,,,,,,,,
-          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",#{file2.title.first},#{file2.resource_type.first},no,,,,,,,,,,,,,,,,,,,,,,,#{file2.sort_date},,,,,,,,,,,,,,
-          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",New Monograph Title,,,,,,,,,,,,,,,,,,,,,,,,,,,,,://:MONOGRAPH://:,,,,,,,,,,
+          #{cover.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(cover)}"")",#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.sort_date},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.sort_date},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},#{cover.id},,,,,,
+          #{file1.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file1)}"")",#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.sort_date},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.sort_date},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},#{file1.id},,,,,,
+          #{file2.id},,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_file_set_url(file2)}"")",#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.sort_date},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.sort_date},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},#{file2.id},,,,,,
+          #{monograph.id},://:MONOGRAPH://:,"=HYPERLINK(""#{Rails.application.routes.url_helpers.hyrax_monograph_url(monograph)}"")",#{monograph.id},,,,,,,,,,,,,,,,,,,,,#{monograph.id},#{monograph.id},,#{monograph.id},,,#{monograph.id},,://:MONOGRAPH://:,,,,,#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id},#{monograph.id}
         eos
       end
       let(:monograph_id) { monograph.id }
-      let(:manifest) { expected_manifest }
+      let(:manifest) { input_manifest }
 
       before do
         monograph.ordered_members << cover
@@ -93,7 +103,11 @@ describe Import::Importer do
       it do
         is_expected.to be true
         actual_manifest = Export::Exporter.new(monograph_id).export
+        puts "input"
+        puts input_manifest
+        puts "actual"
         puts actual_manifest
+        puts "expected"
         puts expected_manifest
         expect(actual_manifest).to eq expected_manifest
       end

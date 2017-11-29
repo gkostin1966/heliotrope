@@ -63,22 +63,27 @@ module Import
       rows.delete(0)
       rows.each do |row|
         noid = row.field('NOID')
+        entity = (noid == monograph.id) ? monograph : FileSet.find(noid)
         row.each do |key, value|
           field = metadata_field(key)
-          next if field.blank? || value.blank?
+          # next if field.blank?
+          # next if value.blank?
           if noid == monograph.id
             if metadata_monograph_field?(key)
-              monograph[field[:metadata_name]] = metadata_field_value(field, value)
-              monograph.save
+              entity[field[:metadata_name]] = metadata_field_value(field, value)
+              entity.save!
+              # monograph.save
             end
           else
-            file_set = FileSet.find(noid)
+            # file_set = FileSet.find(noid)
             if metadata_file_set_field?(key)
-              file_set[field[:metadata_name]] = metadata_field_value(field, value)
-              file_set.save
+              entity[field[:metadata_name]] = metadata_field_value(field, value)
+              entity.save!
+              # file_set.save
             end
           end
         end
+        # entity.save
       end
       true
     end
