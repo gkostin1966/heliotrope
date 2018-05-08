@@ -11,6 +11,10 @@ platform_administrator_constraint = lambda do |request|
 end
 
 Rails.application.routes.draw do
+  constraints !platform_administrator_constraint do
+    match '/*wildcard', to: 'firewall#supermassive_black_hole', as: :event_horizon, via: %i[delete patch post put]
+  end
+
   namespace :api, constraints: ->(req) { req.format == :json } do
     resource :token, only: %i[show]
     scope module: :v1, constraints: API::Version.new('v1', true) do
