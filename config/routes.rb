@@ -168,5 +168,12 @@ Rails.application.routes.draw do
   get ':subdomain', controller: :press_catalog, action: :index, as: :press_catalog
   get ':subdomain/facet', controller: :press_catalog, action: :facet
 
+  # resources :presses, as: :subdomains, path: '/', param: :subdomain, controller: :subdomains, only: %i[] do
+  resources :namespaces, path: '/', param: :namespace, only: %i[] do
+    member do
+      get :dashboard
+    end
+  end
+
   root 'presses#index'
 end
