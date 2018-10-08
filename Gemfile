@@ -143,6 +143,9 @@ gem 'sprockets', '~> 3.7.2'
 # sqlite for epub indexing
 gem 'sqlite3'
 
+# sunspot for checkpoint search and facet
+gem 'sunspot_rails'
+
 # SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
 
