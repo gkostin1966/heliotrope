@@ -4,6 +4,7 @@
 <% else %>
 <% provide :page_header do %>
   <%# render 'shared/survey' %>
+  <%= render 'banner', actor: current_actor, asset: Sighrax.factory(@presenter.id) %>
   <!-- breadcrumbs -->
   <%= render 'shared/breadcrumbs' %>
 

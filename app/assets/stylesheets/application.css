@@ -13,6 +13,7 @@
  *= require common
  * require application_survey
  *= require ebc_banner
+ *= require nag_banner
  *= require_tree ./application
  *= require_tree ./common
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap

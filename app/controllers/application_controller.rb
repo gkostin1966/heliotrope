@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   # as `authenticate_user!` (or whatever your resource is) will halt the filter chain and redirect
   # before the location can be stored.
   before_action :store_user_location!, if: :storable_location?
+  before_action :prepend_bloodstones_views_path
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -47,6 +48,18 @@ class ApplicationController < ActionController::Base
     end
     insts
   end
+
+  protected
+
+    attr_reader :bloodstone
+    # Override in derived controller class to prepend more paths
+    # NOTE: Remember to call super first then prepend_view_path
+    # NOTE: Remember to assign the subdomain to @bloodstone
+    # SEE: press_catalog_controller and monograph_catalog_controller for examples
+    def prepend_bloodstones_views_path
+      Bloodstone.debug_log('prepend_view_path "app/views/bloodstones/views/"')
+      prepend_view_path "app/views/bloodstones/views/"
+    end
 
   private
 

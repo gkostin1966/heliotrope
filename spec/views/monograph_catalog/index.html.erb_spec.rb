@@ -30,6 +30,8 @@ RSpec.describe "monograph_catalog/index.html.erb", type: :view do
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])
+    controller.prepend_view_path "app/views/bloodstones/views/"
+    allow(view).to receive(:current_actor).and_return(Anonymous.new({}))
   end
 
   describe 'provide: page_title' do

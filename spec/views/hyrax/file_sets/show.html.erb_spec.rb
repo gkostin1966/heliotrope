@@ -26,6 +26,8 @@ RSpec.describe 'hyrax/file_sets/show' do
     allow(view).to receive(:parent).and_return(monograph)
     # allow(view).to receive(:can?).with(:edit, file_set_presenter).and_return(false)
     stub_template "hyrax/file_sets/_media.html.erb" => "render nothing"
+    controller.prepend_view_path "app/views/bloodstones/views/"
+    allow(view).to receive(:current_actor).and_return(Anonymous.new({}))
   end
 
   context 'render markdown' do

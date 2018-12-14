@@ -41,6 +41,16 @@ class PressCatalogController < ::CatalogController
     super
   end
 
+  protected
+
+    def prepend_bloodstones_views_path
+      super
+      @bloodstone = params['subdomain'] || ''
+      bloodstones_view_path = "app/views/bloodstones/" + bloodstone + "/views/"
+      Bloodstone.debug_log("PressCatalogController: #{bloodstones_view_path} bloodstone.present? -> #{bloodstone.present?}")
+      prepend_view_path bloodstones_view_path if bloodstone.present?
+    end
+
   private
 
     def load_press

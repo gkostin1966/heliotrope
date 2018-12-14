@@ -1,6 +1,5 @@
-<% presenter = @monograph_presenter || @presenter %>
-<% this_years_ebc = Product.where(identifier: 'ebc_' + Time.current.year.to_s).first %>
-<% ebc_banner_cookie_name = 'ebc_' + Time.current.year.to_s + '_banner' %>
+<% this_years_ebc = Bloodstone::Michigan.current_year_ebc_product %>
+<% ebc_banner_cookie_name = Bloodstone::Michigan.current_year_ebc_product_identifier + '_banner' %>
 <div class="alert alert-info alert-dismissible ebc-banner" role="alert" style="display: none;">
   <button type="button" onclick="ebc_banner_button_no()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&#x2715</span></button>
   <p class="message">Our latest Ebook Collection (<%= this_years_ebc.name %>) is available for purchase now. Would you like to view it?</p>

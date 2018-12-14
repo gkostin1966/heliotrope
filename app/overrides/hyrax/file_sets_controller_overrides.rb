@@ -65,5 +65,15 @@ Hyrax::FileSetsController.class_eval do
       # be necessary to check for overall success. Not going to bother with that for now, returning `true`.
       true
     end
+
+    protected # rubocop:disable Layout/AccessModifierIndentation
+
+      def prepend_bloodstones_views_path
+        super
+        @bloodstone = Sighrax.subdomain(Sighrax.factory(params[:id])) || ''
+        bloodstones_view_path = "app/views/bloodstones/" + bloodstone + "/views/"
+        Bloodstone.debug_log("Hyrax::FileSetsController: #{bloodstones_view_path} bloodstone.present? -> #{bloodstone.present?}")
+        prepend_view_path bloodstones_view_path if bloodstone.present?
+      end
   end)
 end
