@@ -9,6 +9,31 @@
   <div class="col-md-2"><%= link_to 'New Product', new_product_path %></div>
   <hr/>
 </b>
+<% product_picker = ProductPicker.new(component) %>
+<div class="col-md-10">
+  <div class="col-md-1">
+  <button>filter</button>
+  </div>
+  <div class="col-md-6">
+    <input type="text" size="40" id="product_filter" name="product_filter" value=<%= params['product_filter'] %>>
+  </div>
+  <form name="picker" method="get" action="<%= fulcrum_partial_path(:components, Base64.urlsafe_encode64(component.noid)) %>">
+    <div class="col-md-5">
+    <%= select_tag "product_id", options_for_select(product_picker.products(params['product_filter']), params[:product_id] || ''), include_blank: '', onchange: "this.form.submit();" %>
+    </div>
+
+  </form>
+</div>
+<div class="col-md-2">
+
+  <%= form_tag(component_products_path(component), method: "post") do %>
+    <%= hidden_field_tag 'id', params[:product_id]  %>
+    <%= button_tag(type: 'submit', disabled: params[:product_id].blank?,  class: 'btn btn-default') do %>
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+    <% end %>
+  <% end %>
+</div>
+
 <% products.each do |product| %>
   <div class="col-md-10">
     <div class="col-md-1"><%= link_to product.id, product %></div>
