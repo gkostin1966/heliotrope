@@ -44,7 +44,7 @@ module Export
       manifest.close
       @monograph.ordered_members.to_a.each do |member|
         next unless member.original_file
-        filename = CGI.unescape(member.original_file.file_name.first)
+        filename = CGI.unescape(member.original_file.original_name)
         file = File.new(File.join(path, filename), "wb")
         file.write(member.original_file.content.force_encoding("utf-8"))
         file.close
