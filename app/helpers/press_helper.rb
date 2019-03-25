@@ -25,7 +25,7 @@ module PressHelper
 
   def logo(subdomain)
     press = Press.where(subdomain: subdomain)&.first
-    press.present? ? press.logo_path_url : 'fulcrum-white-50px.png'
+    (press.present? && press.logo_path?) ? press.logo_path_url : 'fulcrum-white-50px.png'
   end
 
   def url(subdomain)

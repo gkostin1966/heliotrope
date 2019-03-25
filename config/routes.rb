@@ -149,10 +149,10 @@ Rails.application.routes.draw do
   resource :authentications, only: %i[show new create destroy]
   get 'discovery_feed', controller: :sessions, action: :discovery_feed
   get 'discovery_feed/:id', controller: :sessions, action: :discovery_feed
-  unless Rails.env.production?
+  # unless Rails.env.production?
     get 'Shibboleth.sso/Help', controller: :shibboleths, action: :help
     get 'Shibboleth.sso/Login', controller: :shibboleths, action: :new
-  end
+  # end
 
   get '/', to: redirect('/index.html')
 

@@ -11,8 +11,8 @@ class SessionsController < ApplicationController
       # sign in successful - redirect back to where user came from (see Devise::Controllers::StoreLocation#stored_location_for)
       sign_in_static_cookie
       redirect_to return_location
-    elsif Rails.env.production?
-      production_fallback!
+    # elsif Rails.env.production?
+    #   production_fallback!
     else
       redirect_to new_authentications_path
     end
