@@ -66,6 +66,9 @@ Rails.application.routes.draw do
       end
     end
     resources :share_link_logs, only: %i[index]
+    scope module: :mighrax do
+      resources :identifiers
+    end
     resources :individuals do
       resources :products, only: %i[index]
     end

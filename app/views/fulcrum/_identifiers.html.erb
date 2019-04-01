@@ -1,0 +1,36 @@
+<%
+  identifiers = Mighrax::Identifier.filter(name_like: params[:name_like]).order(name: :asc).page(params[:page])
+  size = 12
+%>
+<h1>Identifiers</h1>
+<form name="filter" method="get" action="<%= fulcrum_partials_path(:identifiers) %>">
+  <table class="table table-striped" summary="Identifiers List">
+    <tr>
+      <th>
+        <%= link_to(new_identifier_path) do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <% end %>
+      </th>
+      <th><label for="name_like">Name</label></th>
+      <th>Aliases</th>
+      <th>UUID</th>
+    </tr>
+    <tr>
+      <td><button name="submit" type="submit" value="filter">Filter</button></td>
+      <td><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></td>
+      <td></td>
+    </tr>
+    <% identifiers.each do |identifier| %>
+      <tr>
+        <td><%= link_to(identifier_path(identifier)) do %>
+            <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> Show
+          <% end %>
+        </td>
+        <td><%= identifier.name %></td>
+        <td><%= identifier.aliases.count %></td>
+        <td><%= identifier.uuid.unpacked %></td>
+      </tr>
+    <% end %>
+  </table>
+</form>
+<%= paginate identifiers %>

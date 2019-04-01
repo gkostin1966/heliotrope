@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+<div id="maincontent">
+  <h1>Identifiers</h1>
+  <b>
+    <div class="col-md-10">
+      <div class="col-md-1">ID</div>
+      <div class="col-md-4">Name</div>
+      <div class="col-md-1">Aliases</div>
+      <div class="col-md-6">UUID</div>
+    </div>
+    <div class="col-md-2"><%= link_to 'New Identifier', new_identifier_path %></div>
+    <div class="col-md-12"><hr/></div>
+  </b>
+  <% @identifiers.each do |identifier| %>
+    <div class="col-md-10">
+      <div class="col-md-1"><%= identifier.id %></div>
+      <div class="col-md-4"><%= identifier.name %></div>
+      <div class="col-md-1"><%= identifier.aliases.count %></div>
+      <div class="col-md-6"><%= identifier.uuid.unpacked %></div>
+    </div>
+    <div class="col-md-2">
+      <div class="col-md-4"><%= link_to 'Show', identifier_path(identifier) %></div>
+      <div class="col-md-4"><%= link_to_if identifier.update?, 'Edit', edit_identifier_path(identifier) %></div>
+      <div class="col-md-4"><%= link_to_if identifier.destroy?, 'Destroy', identifier, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+    </div>
+  <% end %>
+  <div class="col-md-12">&nbsp<%= paginate @identifiers %></div>
+</div>

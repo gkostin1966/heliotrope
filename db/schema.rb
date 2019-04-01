@@ -231,6 +231,21 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "identifiers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_identifiers_on_name"
+  end
+
+  create_table "identifiers_uuids", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "uuid_id"
+    t.bigint "identifier_id"
+    t.index ["identifier_id", "uuid_id"], name: "index_identifiers_uuids_on_identifier_id_and_uuid_id", unique: true
+    t.index ["identifier_id"], name: "index_identifiers_uuids_on_identifier_id"
+    t.index ["uuid_id"], name: "index_identifiers_uuids_on_uuid_id"
+  end
+
   create_table "individuals", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "identifier"
     t.string "name"
@@ -679,6 +694,15 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "uuids", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.binary "packed", limit: 16, null: false
+    t.string "unpacked", limit: 36, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["packed"], name: "index_uuids_on_packed"
+    t.index ["unpacked"], name: "index_uuids_on_unpacked"
+  end
+
   create_table "version_committers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "obj_id"
     t.string "datastream_id"
@@ -699,11 +723,12 @@ ActiveRecord::Schema.define(version: 20190401161317) do
     t.index ["work_id"], name: "index_work_view_stats_on_work_id"
   end
 
-  add_foreign_key "api_requests", "users"
   add_foreign_key "collection_type_participants", "hyrax_collection_types"
   add_foreign_key "components_products", "components"
   add_foreign_key "components_products", "products"
   add_foreign_key "curation_concerns_operations", "users"
+  add_foreign_key "identifiers_uuids", "identifiers"
+  add_foreign_key "identifiers_uuids", "uuids"
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"

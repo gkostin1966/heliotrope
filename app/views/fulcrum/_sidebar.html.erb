@@ -1,5 +1,6 @@
 <ul class="nav nav-sidebar" role="navigation">
   <li <%= "class=active" if partials.to_s == :dashboard.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :dashboard) %>"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Dashboard</a></li>
+  <li <%= "class=active" if partials.to_s == :identifiers.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :identifiers) %>"><span class="glyphicon glyphicon-queen" aria-hidden="true"></span> Identifiers</a></li>
   <li <%= "class=active" if partials.to_s == :products.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :products) %>"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Products</a></li>
   <li <%= "class=active" if partials.to_s == :components.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :components) %>"><span class="glyphicon glyphicon-knight" aria-hidden="true"></span> Components</a></li>
   <li <%= "class=active" if partials.to_s == :individuals.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :individuals) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Individuals</a></li>

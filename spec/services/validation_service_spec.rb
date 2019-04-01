@@ -55,6 +55,18 @@ RSpec.describe ValidationService do
     end
   end
 
+  describe '#valid_uuid?' do
+    let(:uuid) { '00000000-0000-0000-0000-00000000000g' }
+
+    it { expect(described_class.valid_uuid?(uuid)).to be false }
+
+    context 'valid' do
+      let(:uuid) { '00000000-0000-0000-0000-00000000000f' }
+
+      it { expect(described_class.valid_uuid?(uuid)).to be true }
+    end
+  end
+
   describe "#valid_entity?" do
     subject { described_class.valid_entity?(id) }
 

@@ -28,6 +28,11 @@ class ValidationService
     false
   end
 
+  def self.valid_uuid?(uuid)
+    # 8-4-4-4-12 for a total of 36 characters (32 hexadecimal characters and 4 hyphens)
+    /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.match?(uuid)
+  end
+
   # Object Validation
 
   def self.valid_entity?(id)
