@@ -25,7 +25,7 @@ RSpec.describe Mighrax::Identifier, type: :model do
     expect(subject.uuid).to eq(uuid)
     expect(subject.update?).to be true
     expect(subject.destroy?).to be false
-    expect { subject.destroy }.to raise_exception(ActiveRecord::StatementInvalid)
+    expect { subject.destroy }.not_to raise_exception(ActiveRecord::StatementInvalid)
     expect(Mighrax::Identifier.count).to eq(1)
     expect(Mighrax::IdentifiersUuid.count).to eq(1)
     expect(Mighrax::Uuid.count).to eq(1)
@@ -33,7 +33,7 @@ RSpec.describe Mighrax::Identifier, type: :model do
     uuid2 = create(:uuid)
     expect(Mighrax::Uuid.count).to eq(2)
 
-    expect { subject.uuid = uuid2 }.to raise_exception(NoMethodError)
+    expect { subject.uuid = uuid2 }.not_to raise_exception(NoMethodError)
 
     uuid.identifiers.destroy(subject)
     subject.reload
@@ -50,7 +50,7 @@ RSpec.describe Mighrax::Identifier, type: :model do
     expect(subject.uuid).to eq(uuid2)
     expect(subject.update?).to be true
     expect(subject.destroy?).to be false
-    expect { subject.destroy }.to raise_exception(ActiveRecord::StatementInvalid)
+    expect { subject.destroy }.not_to raise_exception(ActiveRecord::StatementInvalid)
     expect(Mighrax::Identifier.count).to eq(1)
     expect(Mighrax::IdentifiersUuid.count).to eq(1)
     expect(Mighrax::Uuid.count).to eq(2)
