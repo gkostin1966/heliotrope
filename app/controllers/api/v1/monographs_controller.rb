@@ -88,7 +88,8 @@ module API
         end
         FileUtils.rm_rf(extract_dir) if Dir.exist?(extract_dir)
 
-        send_data File.read(extract_zip), type: 'application/zip', filename: extract_zip, dispostion: 'inline'
+        # send_data File.read(extract_zip), type: 'application/zip', filename: extract_zip, dispostion: 'inline'
+        send_file extract_zip, type: 'application/zip', dispostion: 'inline'
       end
 
       private
