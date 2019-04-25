@@ -88,10 +88,8 @@ class FileSet < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  include GlobalID::Identification
   include HeliotropeUniversalMetadata
   include ::Hyrax::FileSetBehavior
-  include ::Hyrax::BasicMetadata
 
   self.indexer = ::FileSetIndexer
   # Cast to a SolrDocument by querying from Solr
