@@ -30,11 +30,11 @@ Hyrax::Actors::CleanupFileSetsActor.class_eval do
       ## remove itself individually from the work. If hundreds of files are attached,
       ## this would take too long.
 
-      ## Get list of member file_sets from Solr
+      # # Get list of member file_sets from Solr
       # fs = curation_concern.file_sets
       # curation_concern.list_source.destroy
-      ## Remove Work from Solr after it was removed from Fedora so that the
-      ## in_objects lookup does not break when FileSets are destroyed.
+      # # Remove Work from Solr after it was removed from Fedora so that the
+      # # in_objects lookup does not break when FileSets are destroyed.
       # ActiveFedora::SolrService.delete(curation_concern.id)
       # fs.each(&:destroy)
       # ******************************** End Hyrax Version ************************************************* #
@@ -46,17 +46,18 @@ Hyrax::Actors::CleanupFileSetsActor.class_eval do
       # ActiveFedora::SolrService.delete(curation_concern.id)
       # DeleteActiveFedoraObjectsJob.perform_later(fs_ids, true)
 
-      # Remove FileSets from Work before it is removed from Fedora
       file_sets = curation_concern.file_sets
-      file_sets.each do |file_set|
-        curation_concern.ordered_members.delete(file_set)
-        curation_concern.members.delete(file_set)
-      end
+
+      # Remove FileSets from Work before it is removed from Fedora
+      # file_sets.each do |file_set|
+      #   curation_concern.ordered_members.delete(file_set)
+      #   curation_concern.members.delete(file_set)
+      # end
 
       # Remove Work from Solr before it is removed from Fedora
-      ActiveFedora::SolrService.delete(curation_concern.id + '/list_source')
-      ActiveFedora::SolrService.delete(curation_concern.id + '/members')
-      ActiveFedora::SolrService.delete(curation_concern.id)
+      # ActiveFedora::SolrService.delete(curation_concern.id + '/list_source')
+      # ActiveFedora::SolrService.delete(curation_concern.id + '/members')
+      # ActiveFedora::SolrService.delete(curation_concern.id)
 
       # # Remove FileSets from Solr before they are removed from Fedora
       # file_sets.each do |file_set|
@@ -64,7 +65,12 @@ Hyrax::Actors::CleanupFileSetsActor.class_eval do
       #   ActiveFedora::SolrService.delete(file_set.id)
       # end
 
-      DeleteActiveFedoraObjectsJob.perform_later(file_sets.map(&:id), true)
+      # DeleteActiveFedoraObjectsJob.perform_later(file_sets.map(&:id), true)
+
+      file_sets.each do |file_set|
+        puts file_set.in_works
+        file_set.destroy
+      end
     end
   end)
 end

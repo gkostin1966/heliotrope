@@ -18,7 +18,7 @@ def create_monograph(title)
     attach_file('files[]', File.absolute_path('./spec/fixtures/csv/shipwreck.jpg'), multiple: true, make_visible: true)
   end
 
-  choose 'monograph_visibility_open'
+  choose 'monograph_visibility_open', wait: 5
   check 'I have read', wait: 5
   click_on 'Save', wait: 10
   expect(page).to have_content 'Your files are being processed by Fulcrum in the background.'
@@ -72,8 +72,8 @@ RSpec.describe "Monograph Create Destroy", type: :system do
 
   before do
     # Don't print/puts status messages during specs
-    allow($stdout).to receive(:puts)
-    allow($stdout).to receive(:print)
+    # allow($stdout).to receive(:puts)
+    # allow($stdout).to receive(:print)
     ActiveFedora::Cleaner.clean!
     sign_in user
   end

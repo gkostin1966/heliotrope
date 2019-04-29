@@ -18,9 +18,9 @@ def create_monograph(title)
     attach_file('files[]', File.absolute_path('./spec/fixtures/csv/shipwreck.jpg'), multiple: true, make_visible: true)
   end
 
-  choose 'monograph_visibility_open'
-  check 'I have read'
-  click_on 'Save'
+  choose 'monograph_visibility_open', wait: 5
+  check 'I have read', wait: 5
+  click_on 'Save', wait: 10
   expect(page).to have_content 'Your files are being processed by Fulcrum in the background.'
 end
 
@@ -51,8 +51,8 @@ RSpec.describe "Monograph Create Delete", type: :system do
 
   before do
     # Don't print/puts status messages during specs
-    allow($stdout).to receive(:puts)
-    allow($stdout).to receive(:print)
+    # allow($stdout).to receive(:puts)
+    # allow($stdout).to receive(:print)
     ActiveFedora::Cleaner.clean!
     sign_in user
   end
@@ -104,6 +104,17 @@ RSpec.describe "Monograph Create Delete", type: :system do
       end
     end
 
+    # puts ''
+    # count = ActiveFedora::Base.count
+    # puts count
+    # while count > 3 do
+    #   sleep(1.second)
+    #   count = ActiveFedora::Base.count
+    #   puts count
+    # end
+    # puts ''
+    # puts ''
+
     fedora_contains = RestfulFedora::Service.new.contains
     puts "Fedora contains"
     puts fedora_contains.inspect
@@ -114,7 +125,7 @@ RSpec.describe "Monograph Create Delete", type: :system do
     puts solr_contains.inspect
     puts ''
 
-    puts "ActiveFedora::Base.count #{ActiveFedora::Base.count}"
+    puts "ActiveFedora::Base::count #{ActiveFedora::Base.count}"
     puts ''
     expect(ActiveFedora::Base.count).to eq(3) # AdminSet, AccessControl, and Permission
 
