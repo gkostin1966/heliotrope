@@ -26,8 +26,12 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       model_factory(noid, data, model_type)
     end
 
-    def policy(current_actor, entity)
-      EntityPolicy.new(current_actor, entity)
+    def presenter(actor, entity)
+      presenter_factory(actor, entity)
+    end
+
+    def policy(actor, entity)
+      policy_factory(actor, entity)
     end
 
     def press(entity)
@@ -143,6 +147,18 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
         else
           Asset.send(:new, noid, data)
         end
+      end
+
+      def presenter_factory(actor, entity)
+        if entity.is_a?(Monograph)
+            MonographPresenter.send(:new, actor, entity)
+        else
+          Presenter.null_presenter(actor, entity)
+        end
+      end
+
+      def policy_factory(actor, entity)
+
       end
 
       def actor_products(actor)
