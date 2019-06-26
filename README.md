@@ -1,6 +1,8 @@
 # Heliotrope
-Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
+[![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
+[![API Docs](https://img.shields.io/badge/API_docs-rubydoc.info-blue.svg)](https://www.rubydoc.info/github/mlibrary/heliotrope)
+[![Documentation Status](https://readthedocs.org/projects/heliotrope/badge/?version=latest)](https://heliotrope.readthedocs.io/en/latest/?badge=latest)
 
 Thanks to [Skylight](https://www.skylight.io/support/skylight-for-open-source): [![View performance data on Skylight](https://badges.skylight.io/status/TtaAmIlZOoFS.svg)](https://oss.skylight.io/app/applications/TtaAmIlZOoFS)
 

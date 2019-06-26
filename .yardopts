@@ -1,1 +1,1 @@
---no-private --protected app/**/*.rb - LICENSE.txt
+--no-private --protected --output-dir=./docs/_yard lib/**/*.rb app/**/*.rb config/**/*.rb - LICENSE.txt
