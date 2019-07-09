@@ -181,8 +181,9 @@ RSpec.describe AptrustDepositJob, type: :job do
       let(:boolean) { double('boolean') }
 
       before do
-        allow(Aws::S3::Resource).to receive(:new).with(region: 's3 bucket region').and_return(resource)
-        allow(resource).to receive(:bucket).with('s3 bucket').and_return(bucket)
+        allow(Aws::Credentials).to receive(:new).with(Settings.aptrust.aws.access_key_id, Settings.aptrust.aws.secret_access_key).and_call_original
+        allow(Aws::S3::Resource).to receive(:new).with(region: Settings.aptrust.aws.s3.region).and_return(resource)
+        allow(resource).to receive(:bucket).with(Settings.aptrust.aws.s3.bucket).and_return(bucket)
         allow(bucket).to receive(:object).with(File.basename(filename, '.tar')).and_return(obj)
         allow(obj).to receive(:upload_file).with(filename).and_return(boolean)
       end

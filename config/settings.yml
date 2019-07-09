@@ -5,3 +5,15 @@ shibboleth:
   sp:
     url: /Shibboleth.sso
     entity_id: https://fulcrum.org/sp
+
+aptrust:
+  api:
+    url: ADD_DEMO_OR_REPO_URL_HERE
+    user: user@umich.edu
+    key: ADD_USER_DEMO_OR_REPO_API_KEY_HERE
+  aws:
+    access_key_id: 123456789XYZ
+    secret_access_key: THIS KEY INCLUDES SPACES AND DOES NOT NEED QUOTES
+    s3:
+      bucket: s3 bucket
+      region: s3 bucket region

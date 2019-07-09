@@ -100,10 +100,8 @@ class AptrustDepositJob < ApplicationJob
   end
 
   def deposit(filename)
-    aptrust_yaml = Rails.root.join('config', 'aptrust.yml')
-    aptrust = YAML.safe_load(File.read(aptrust_yaml)) # if File.exist?(aptrust_yaml)
-    Aws.config.update(credentials: Aws::Credentials.new(aptrust['AwsAccessKeyId'], aptrust['AwsSecretAccessKey']))
-    s3 = Aws::S3::Resource.new(region: aptrust['BucketRegion'])
-    s3.bucket(aptrust['Bucket']).object(File.basename(filename, '.tar')).upload_file(filename)
+    Aws.config.update(credentials: Aws::Credentials.new(Settings.aptrust.aws.access_key_id, Settings.aptrust.aws.secret_access_key))
+    s3 = Aws::S3::Resource.new(region: Settings.aptrust.aws.s3.region)
+    s3.bucket(Settings.aptrust.aws.s3.bucket).object(File.basename(filename, '.tar')).upload_file(filename)
   end
 end
