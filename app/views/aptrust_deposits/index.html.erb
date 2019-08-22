@@ -9,7 +9,7 @@
         <div class="col-md-2"><div>NOID</div><div><input type="text" name="noid_like" value="<%= params[:noid_like] %>" size="<%= size %>" aria-label="noid_like"></div></div>
         <div class="col-md-5"><div>Identifier</div><div><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size * 2 %>" aria-label="identifier_like"><button name="submit" type="submit" value="filter">Filter</button></div></div>
         <div class="col-md-3">Timestamp</div>
-        <div class="col-md-2">Verified</div>
+        <div class="col-md-2"><div>Verified</div><div><input type="checkbox" name="verified_like" value=0 <%= params[:verified_like] == '0' ? 'checked' : '' %> aria-label="verified_like"></div></div>
       </div>
       <div class="col-md-2">&nbsp;</div>
       <div class="col-md-12"><hr/></div>
