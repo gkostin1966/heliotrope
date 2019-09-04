@@ -1,3 +1,10 @@
+hostname: <%= ENV['APP_HOSTNAME'] || 'heliotrope-dev.local' %>
+
+rails:
+  database:
+    database: heliotrope_development
+  secret_key_base: ce8e524e16f8aafae63aa0a00781e57c0e32339790163a6d5ae66d23df4522e6dfee3d6ccadc2af30dc88fa826f3b2ad151d9c17c60e5b52ed8bd6da7c71e5a1
+
 # settings for curation concerns in a developemnt environment:
 # derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
 derivatives_path: <%= File.join(Rails.root, 'tmp', 'derivatives') %>

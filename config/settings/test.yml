@@ -1,3 +1,14 @@
+hostname: <%= ENV['APP_HOSTNAME'] || 'heliotropium-test.local' %>
+
+rails:
+  database:
+    # Warning: The database defined as "test" will be erased and
+    # re-generated from your development database when you run "rake".
+    # Do not set this db to the same as development or production.
+    database: heliotropium_test
+    timeout: 10000
+  secret_key_base: 2b4991d3f6b82031f31cd4d1afb800bf8030fcd5a62045f1a43c721f59560043e9a4b64a17b321bb2b95beab368722443793124f4e718318551407f5cdca9bd4
+
 # settings for curation concerns for the test environment, locally and on Travis:
 # derivatives_path contains thumbnails and web-friendly audio, and video files for playbock
 derivatives_path: <%= File.join(Rails.root, 'tmp', 'rspec_derivatives') %>

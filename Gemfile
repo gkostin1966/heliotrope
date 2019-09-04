@@ -77,6 +77,9 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # Currently used in the robots_controller, maybe not needed in the long run
 gem 'actionpack-page_caching', '~> 1.1.0'
 
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
 # HELIO-2531
 gem "sassc", ">= 2.0.0"
 gem "bootstrap-sass", ">= 3.4.1"
@@ -103,6 +106,10 @@ gem 'cozy-sun-bear', git: 'https://github.com/mlibrary/cozy-sun-bear', ref: '214
 
 gem 'devise', '~> 4.6.0'
 gem 'devise-guests', '~> 0.3'
+
+# The best way to add settings in any ruby project.
+# https://github.com/mlibrary/ettin
+gem 'ettin', '~> 1.1'  # 1.2
 
 gem 'faraday', '~>0.12.2'
 gem 'faraday_middleware', '~>0.12.2'
