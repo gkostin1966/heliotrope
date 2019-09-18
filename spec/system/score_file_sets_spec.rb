@@ -82,10 +82,10 @@ RSpec.describe "Score FileSets and PDF reader", type: :system, browser: true do
     visit score_show_path(score.id)
 
     within_fieldset pdf.id do
-      expect(page).not_to have_xpath('.//div/div/b')
+      expect(page).not_to have_xpath('.//div/div/button')
       select('pdf_ebook', from: 'kind')
       click_on('Set')
-      expect(page).to have_xpath('.//div/div/b') # this is now "pdf_ebook"
+      expect(page).to have_xpath('.//div/div/button') # this is now "pdf_ebook"
     end
 
     visit score_catalog_path(score.id)
@@ -113,11 +113,11 @@ RSpec.describe "Score FileSets and PDF reader", type: :system, browser: true do
     visit score_show_path(score.id)
 
     within_fieldset pdf.id do
-      expect(page).to have_xpath('.//div/div/b')
+      expect(page).to have_xpath('.//div/div/button')
       accept_alert do
         click_on('Unset')
       end
-      expect(page).not_to have_xpath('.//div/div/b') # 'pdf_ebook' is gone now
+      expect(page).not_to have_xpath('.//div/div/button') # 'pdf_ebook' is gone now
     end
   end
 end

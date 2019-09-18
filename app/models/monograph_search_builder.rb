@@ -17,7 +17,7 @@ class MonographSearchBuilder < ::SearchBuilder
   private
 
     # Get the asset/fileset ids of the monograph
-    def asset_ids(id)
+    def asset_ids(id) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       monograph = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
       return if monograph.blank?
 
@@ -27,8 +27,9 @@ class MonographSearchBuilder < ::SearchBuilder
       ids = []
       docs.each do |doc|
         fp = Hyrax::FileSetPresenter.new(doc, nil)
-        next if fp.featured_representative?
-        next if fp.id == monograph.representative_id
+        can_not_edit = !current_ability.can?(:edit, fp.id)
+        next if fp.featured_representative? && can_not_edit
+        next if fp.id == monograph.representative_id && can_not_edit
         next if Sighrax.tombstone?(Sighrax.from_presenter(fp))
         ids << fp.id
       end

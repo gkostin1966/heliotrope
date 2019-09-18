@@ -5,7 +5,8 @@ require 'rails_helper'
 describe MonographSearchBuilder do
   let(:search_builder) { described_class.new(context) }
   let(:config) { CatalogController.blacklight_config }
-  let(:context) { double('context', blacklight_config: config) }
+  let(:context) { double('context', blacklight_config: config, current_ability: current_ability) }
+  let(:current_ability) { instance_double(Ability, 'ability') }
   let(:solr_params) { { fq: [] } }
 
   describe "#filter_by_members" do
@@ -29,7 +30,8 @@ describe MonographSearchBuilder do
       before do
         ActiveFedora::SolrService.add([monograph.to_h, cover.to_h, file1.to_h, file2.to_h])
         ActiveFedora::SolrService.commit
-        search_builder.blacklight_params['id'] = "mono"
+        search_builder.blacklight_params['id'] = monograph.id
+        allow(current_ability).to receive(:can?).with(:edit, monograph.id).and_return(false)
       end
 
       context "reprensentative id (cover)" do

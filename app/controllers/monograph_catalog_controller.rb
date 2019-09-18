@@ -73,6 +73,43 @@ class MonographCatalogController < ::CatalogController
     session[:preferred_monograph_view] = params[:view] if params[:view]
   end
 
+  # rubocop:disable Metrics/BlockNesting
+  def representative # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    monograph_id = params[:id]&.downcase
+    if current_ability.can?(:edit, monograph_id)
+      file_set_id = params[:file_set_id]&.downcase
+      kind = params[:kind]&.downcase
+      if monograph_id && file_set_id && kind
+        monograph = Monograph.find(monograph_id)
+        fr = FeaturedRepresentative.where(work_id: monograph_id, kind: kind).first
+        fr.destroy! if fr.present?
+        fr = FeaturedRepresentative.where(file_set_id: file_set_id).first
+        fr.destroy! if fr.present?
+        case kind
+        when /^asset$/
+          monograph.thumbnail_id = nil if /^#{file_set_id}$/i.match?(monograph.thumbnail_id)
+          monograph.representative_id = nil if /^#{file_set_id}$/i.match?(monograph.representative_id)
+          monograph.save!
+        when /^cover$/
+          monograph.thumbnail_id = file_set_id
+          monograph.representative_id = file_set_id
+          monograph.save!
+        else
+          if FeaturedRepresentative::KINDS.include?(kind)
+            FeaturedRepresentative.create!(work_id: monograph_id,
+                                           file_set_id: file_set_id,
+                                           kind: kind)
+            if %w[epub webgl].include?(kind)
+              UnpackJob.perform_later(params[:file_set_id], kind)
+            end
+          end
+        end
+      end
+    end
+    redirect_to monograph_catalog_path(monograph_id)
+  end
+  # rubocop:enable Metrics/BlockNesting
+
   private
 
     def load_presenter

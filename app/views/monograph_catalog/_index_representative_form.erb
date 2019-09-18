@@ -1,0 +1,25 @@
+<% if can? :edit, member.id %>
+  <% if member.parent.present? %>
+    <%= form_tag(main_app.monograph_catalog_representative_path(member.parent.id, member.id), method: "post") do %>
+      <fieldset id="<%= member.id %>">
+        <div class="row">
+          <div class="col-sm-7">
+            <% kinds = %w[asset cover]
+               kinds += FeaturedRepresentative.kinds
+               kinds.sort!
+               selected ||= 'cover' if member.representative?
+               selected ||= member.featured_representative.kind if member.featured_representative?
+               selected ||= 'asset'
+            %>
+            <%= select_tag(:kind, options_for_select(kinds, selected), class: 'form-control') %>
+            <%= hidden_field_tag(:monograph_id, member.parent.id) %>
+            <%= hidden_field_tag(:file_set_id, member.id) %>
+          </div>
+          <div class="col-sm-5">
+            <%= submit_tag("Set", class: 'btn btn-default') %>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+  <% end  %>
+<% end %>

@@ -56,7 +56,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    def hyrax_presenter(entity)
+    def hyrax_presenter(entity, current_ability = nil)
       if entity.is_a?(Sighrax::Monograph)
         Hyrax::MonographPresenter.new(SolrDocument.new(entity.send(:data)), nil)
       elsif entity.is_a?(Sighrax::Score)
@@ -64,7 +64,7 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
       elsif entity.is_a?(Sighrax::Asset)
         Hyrax::FileSetPresenter.new(SolrDocument.new(entity.send(:data)), nil)
       else
-        Hyrax::Presenter.send(:new, entity.noid)
+        Hyrax::Presenter.send(:new, entity.noid, current_ability)
       end
     end
 
