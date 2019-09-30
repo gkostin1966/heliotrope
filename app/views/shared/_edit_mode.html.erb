@@ -1,0 +1,13 @@
+<% if can_ever_edit_works? %>
+  <li>
+    <% if current_ability.edit_mode? %>
+      <%= link_to(main_app.edit_mode_path, method: :delete) do %>
+        <span class="fa fa-toggle-on" aria-hidden="true"></span> <span class="sidebar-action-text">Edit</span>
+      <% end %>
+    <% else %>
+      <%= link_to(main_app.edit_mode_path, method: :post) do %>
+        <span class="fa fa-toggle-off" aria-hidden="true"></span> <span class="sidebar-action-text">Edit</span>
+      <% end %>
+    <% end %>
+  </li>
+<% end %>

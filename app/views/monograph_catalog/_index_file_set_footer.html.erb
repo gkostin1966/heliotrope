@@ -1,5 +1,5 @@
 <%
-  if can? :edit, document.id
+  if can?(:edit, document.id) && current_ability.edit_mode?
     presenter = Sighrax.hyrax_presenter(Sighrax.factory(document.id), current_ability)
 %>
   <div class="row"><%= render "index_representative_form", member: presenter %></div>

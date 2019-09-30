@@ -184,6 +184,8 @@ Rails.application.routes.draw do
   end
   # don't show the Hyrax deposit agreement here, which we never needed or set up fully (i.e. no institution_name)
   get '/agreement', to: 'application#page_not_found'
+  post '/edit_mode', to: 'application#toggle_edit_mode_on'
+  delete '/edit_mode', to: 'application#toggle_edit_mode_off'
 
   mount Hyrax::Engine, at: '/'
 

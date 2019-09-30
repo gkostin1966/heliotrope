@@ -14,5 +14,15 @@ module Heliotrope
       end
       can
     end
+
+    # Returns true if can edit at least one type of work
+    def can_ever_edit_works?
+      can = false
+      Hyrax.config.curation_concerns.each do |curation_concern_type|
+        break if can
+        can = can?(:edit, curation_concern_type) && current_user.groups.length.positive?
+      end
+      can
+    end
   end
 end

@@ -32,6 +32,22 @@ class ApplicationController < ActionController::Base
   # rescue_from CanCan::AccessDenied, with: :render_unauthorized # TODO: Might be needed
   # check_authorization unless: :devise_controller? || :checkpoint_controller?
 
+  def toggle_edit_mode_on
+    if current_user && current_user.instance_of?(User)
+      current_user.guest = false
+      current_user.save!
+    end
+    redirect_back fallback_location: root_path
+  end
+
+  def toggle_edit_mode_off
+    if current_user && current_user.instance_of?(User)
+      current_user.guest = true
+      current_user.save!
+    end
+    redirect_back fallback_location: root_path
+  end
+
   def page_not_found
     render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
   end

@@ -18,6 +18,27 @@ describe Ability do
     Hyrax::PresenterFactory.build_for(ids: [file_set.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: described_class.new(creating_user)).first
   end
 
+  describe '#edit_mode?' do
+    subject { ability.edit_mode? }
+
+    let(:ability) { described_class.new(current_user) }
+    let(:current_user) { create(:user) }
+
+    it { is_expected.to be true }
+
+    context 'guest == false' do
+      before { current_user.guest = false; current_user.save! }
+
+      it { is_expected.to be true }
+    end
+
+    context 'guest == true' do
+      before { current_user.guest = true; current_user.save! }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe 'a platform-wide admin user' do
     let(:creating_user) { current_user }
     let(:current_user) { create(:platform_admin) }

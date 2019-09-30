@@ -85,4 +85,8 @@ class Ability
   def only_scores
     @user.admin_presses.count == 1 && @user.admin_presses.pluck(:subdomain).first == Services.score_press
   end
+
+  def edit_mode?
+    @user.guest == false
+  end
 end

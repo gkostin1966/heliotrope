@@ -36,6 +36,84 @@ RSpec.describe ApplicationController, type: :controller do
     it { expect(controller.send(:checkpoint_controller?)).to be false }
   end
 
+  describe 'toggle edit mode' do
+    let(:current_user) { }
+
+    before do
+      allow(controller).to receive(:current_user).and_return(current_user)
+      allow(controller).to receive(:redirect_back).with(fallback_location: root_path)
+      current_user
+    end
+
+    it '#toggle_edit_mode_off' do
+      controller.toggle_edit_mode_off
+      expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+    end
+
+    it '#toggle_edit_mode_on' do
+      controller.toggle_edit_mode_on
+      expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+    end
+
+    context 'Guest' do
+      let(:current_user) { User.guest(user_key: 'wolverine@umich.edu') }
+
+      before do
+        allow(current_user).to receive(:guest=).with(true).and_call_original
+        allow(current_user).to receive(:guest=).with(false).and_call_original
+        allow(current_user).to receive(:save!).and_call_original
+      end
+
+      it '#toggle_edit_mode_off' do
+        controller.toggle_edit_mode_off
+        expect(current_user).not_to have_received(:guest=).with(true)
+        expect(current_user).not_to have_received(:guest=).with(false)
+        expect(current_user).not_to have_received(:save!)
+        expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+        expect(current_user.guest).to eq(false)
+      end
+
+      it '#toggle_edit_mode_on' do
+        controller.toggle_edit_mode_on
+        expect(current_user).not_to have_received(:guest=).with(true)
+        expect(current_user).not_to have_received(:guest=).with(false)
+        expect(current_user).not_to have_received(:save!)
+        expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+        expect(current_user.guest).to eq(false)
+      end
+    end
+
+    context 'User' do
+      let(:current_user) { create(:user) }
+
+      before do
+        allow(current_user).to receive(:guest=).with(true).and_call_original
+        allow(current_user).to receive(:guest=).with(false).and_call_original
+        allow(current_user).to receive(:save!).and_call_original
+      end
+
+      it '#toggle_edit_mode_off' do
+        controller.toggle_edit_mode_off
+        expect(current_user).to have_received(:guest=).with(true)
+        expect(current_user).not_to have_received(:guest=).with(false)
+        expect(current_user).to have_received(:save!)
+        expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+        current_user.reload
+        expect(current_user.guest).to eq(true)
+      end
+
+      it '#toggle_edit_mode_on' do
+        controller.toggle_edit_mode_on
+        expect(current_user).not_to have_received(:guest=).with(true)
+        expect(current_user).to have_received(:guest=).with(false)
+        expect(current_user).to have_received(:save!)
+        expect(controller).to have_received(:redirect_back).with(fallback_location: root_path)
+        current_user.reload
+        expect(current_user.guest).to eq(false)
+      end
+    end
+  end
+
   describe '#current_actor' do
     subject { controller.current_actor }
 
