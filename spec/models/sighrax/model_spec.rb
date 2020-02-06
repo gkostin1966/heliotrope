@@ -19,9 +19,21 @@ RSpec.describe Sighrax::Model, type: :model do
     it { expect(subject.send(:model_type)).to eq 'Model' }
   end
 
-  context '#title' do
+  describe '#title' do
     let(:data) { { 'title_tesim' => ['Title'] } }
 
     it { expect(subject.title).to eq 'Title' }
+  end
+
+  describe '#created' do
+    let(:data) { { 'date_uploaded_dtsi' => ['Created'] } }
+
+    it { expect(subject.created).to eq 'Created' }
+  end
+
+  describe '#modified' do
+    let(:data) { { 'date_modified_dtsi' => ['Modified'] } }
+
+    it { expect(subject.modified).to eq 'Modified' }
   end
 end
