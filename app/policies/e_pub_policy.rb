@@ -24,8 +24,8 @@ class EPubPolicy < ResourcePolicy
       value = Sighrax.restricted?(target)
       debug_log("restricted? #{value}")
       if value
-        value = Sighrax.ability_can?(actor, :manage, target) && Incognito.allow_ability_can?(actor)
-        debug_log("ability_can(:manage)? #{value}")
+        value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
+        debug_log("ability_can(:edit)? #{value}")
         return true if value
 
         debug_log("share #{share}")
@@ -56,8 +56,8 @@ class EPubPolicy < ResourcePolicy
         true
       end
     else
-      value = Sighrax.ability_can?(actor, :manage, target) && Incognito.allow_ability_can?(actor)
-      debug_log("ability_can(:manage)? #{value}")
+      value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
+      debug_log("ability_can(:edit)? #{value}")
       return true if value
 
       value = Sighrax.ability_can?(actor, :read, target) && Incognito.allow_ability_can?(actor)

@@ -18,7 +18,7 @@ RSpec.describe EPubPolicy do
   let(:share) { false }
   let(:is_a_user) { false }
   let(:ability_can_read) { false }
-  let(:ability_can_manage) { false }
+  let(:ability_can_edit) { false }
   let(:platform_admin) { false }
   let(:allow_ability_can) { true }
   let(:allow_platform_admin) { true }
@@ -28,7 +28,7 @@ RSpec.describe EPubPolicy do
     allow(actor).to receive(:is_a?).with(User).and_return(is_a_user)
     allow(actor).to receive(:platform_admin?).and_return(platform_admin)
     allow(Sighrax).to receive(:ability_can?).with(actor, :read, parent).and_return(ability_can_read)
-    allow(Sighrax).to receive(:ability_can?).with(actor, :manage, parent).and_return(ability_can_manage)
+    allow(Sighrax).to receive(:ability_can?).with(actor, :edit, parent).and_return(ability_can_edit)
     allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
     allow(Sighrax).to receive(:published?).with(parent).and_return(published)
     allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted)
@@ -64,8 +64,8 @@ RSpec.describe EPubPolicy do
           end
         end
 
-        context 'ability_can_manage' do
-          let(:ability_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
@@ -138,8 +138,8 @@ RSpec.describe EPubPolicy do
           end
         end
 
-        context 'ability_can_manage' do
-          let(:ability_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
@@ -219,8 +219,8 @@ RSpec.describe EPubPolicy do
           it { is_expected.to be false }
         end
 
-        context 'ability_can_manage' do
-          let(:ability_can_manage) { true }
+        context 'ability_can_edit' do
+          let(:ability_can_edit) { true }
 
           it { is_expected.to be true }
 
