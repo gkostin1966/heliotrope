@@ -38,8 +38,9 @@ RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
+  config.add_setting :use_active_fedora_cleaner, default: true
   config.before do
-    ActiveFedora::Cleaner.clean! if ActiveFedora::Base.count > 0
+    ActiveFedora::Cleaner.clean! if config.use_active_fedora_cleaner && ActiveFedora::Base.count > 0
   end
 
   # System specs (new in rails 5.1) use headless chrome and Capybara

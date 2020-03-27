@@ -182,6 +182,10 @@ gem 'signet'
 # performance profiling
 gem 'skylight'
 
+group :test do
+  gem 'database_cleaner-active_record'
+end
+
 group :development, :test do
   gem 'byebug'
   # test coverage with coveralls
