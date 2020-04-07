@@ -8,6 +8,18 @@ module Sighrax
       Array(data['title_tesim']).first || super
     end
 
+    def representative?
+      principal_noid.present?
+    end
+
+    def principal
+      Sighrax.from_noid(principal_noid)
+    end
+
+    def principal_noid
+      Array(data['parent_model_noid_ssim']).first
+    end
+
     protected
 
       def model_type
