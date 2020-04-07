@@ -5,6 +5,7 @@
     <a class="btn btn-default btn-lg" href="<%= parent_path(parent) %>">
       <%= "Back to #{parent.human_readable_type}" %>
     </a>
+    <a class="btn btn-default btn-lg" href="<%= polymorphic_path([main_app, :model, presenter]) %>">Model</a>
   <% end %>
   <% if presenter.embeddable_type? && (can?(:edit, presenter) || presenter.allow_embed?) %>
     <form action="#" onsubmit="CopyToClipboard()" style="display:inline;">

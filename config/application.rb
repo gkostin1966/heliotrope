@@ -95,6 +95,8 @@ module Heliotrope
       Hyrax::CurationConcern.actor_factory.insert_after(RegisterFileSetDoisActor, CreateWithImportFilesActor)
       # Destroy FeaturedRepresentatives on delete
       Hyrax::CurationConcern.actor_factory.insert_after(Hyrax::Actors::CleanupTrophiesActor, FeaturedRepresentativeActor)
+      # Delete ModelTreeVertices and ModelTreeEdges
+      Hyrax::CurationConcern.actor_factory.insert_after(FeaturedRepresentativeActor, ModelTreeActor)
     end
   end
 end

@@ -20,5 +20,6 @@
  <% end %>
  <% if presenter.editor? %>
    <%= link_to "Publish This #{@presenter.human_readable_type}", [main_app, :publish, @presenter], class: 'btn btn-primary', data: { confirm: "Publish this #{@presenter.human_readable_type}?" }, method: :post %>
+   <%= link_to "Model", [main_app, :model, @presenter], class: 'btn btn-default' %>
  <% end %>
 </div>

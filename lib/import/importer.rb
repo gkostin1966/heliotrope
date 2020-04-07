@@ -28,7 +28,7 @@ module Import
     end
 
     def metadata_field(key)
-      (METADATA_FIELDS + FILE_SET_FLAG_FIELDS).each do |field|
+      (METADATA_FIELDS + MODELING_FIELDS).each do |field|
         return field if key == field[:field_name]
       end
       nil

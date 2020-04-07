@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module BreadcrumbsHelper
+module BreadcrumbsHelper # rubocop:disable Metrics/ModuleLength
   mattr_accessor :crumbs
 
   def breadcrumbs # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -27,18 +27,53 @@ module BreadcrumbsHelper
       curation_concerns_monograph_show
     when "file_sets"
       file_sets
+    when "model_trees"
+      model_trees
     end
     @crumbs
   end
 
   private
 
+    def model_trees
+      if @presenter.is_a?(Hyrax::FileSetPresenter)
+        file_sets_show_model_tree
+      else
+        curation_concerns_show_model_tree
+      end
+    end
+
+    def file_sets_show_model_tree
+      if @presenter.parent.is_a? Hyrax::MonographPresenter
+        @crumbs << { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
+        @crumbs << { href: main_app.monograph_show_path(@presenter.parent.id), text: 'Show', class: "" }
+      elsif @presenter.parent.is_a? Hyrax::ScorePresenter
+        @crumbs << { href: main_app.score_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
+        @crumbs << { href: main_app.score_show_path(@presenter.parent.id), text: 'Show', class: "" }
+      end
+      @crumbs << { href: main_app.hyrax_file_set_path(@presenter), text: @presenter.title }
+      @crumbs << { href: "", text: 'Model', class: "active" }
+    end
+
+    def curation_concerns_show_model_tree
+      if @presenter.is_a?(Hyrax::MonographPresenter)
+        @crumbs << { href: main_app.monograph_catalog_path(@presenter), text: @presenter.title, class: "" }
+        @crumbs << { href: main_app.monograph_show_path(@presenter), text: 'Show', class: "" }
+      else
+        @crumbs << { href: main_app.score_catalog_path(@presenter), text: @presenter.title, class: "" }
+        @crumbs << { href: main_app.score_show_path(@presenter), text: 'Show', class: "" }
+      end
+      @crumbs << { href: "", text: 'Model', class: "active" }
+    end
+
     def file_sets
-      @crumbs << if @presenter.parent.is_a? Hyrax::MonographPresenter
-                   { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
-                 elsif @presenter.parent.is_a? Hyrax::ScorePresenter
-                   { href: main_app.score_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
-                 end
+      if @presenter.parent.is_a? Hyrax::MonographPresenter
+        @crumbs << { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
+        @crumbs << { href: main_app.monograph_show_path(@presenter.parent.id), text: 'Show', class: "" } if params[:parent_id].present?
+      elsif @presenter.parent.is_a? Hyrax::ScorePresenter
+        @crumbs << { href: main_app.score_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
+        @crumbs << { href: main_app.score_show_path(@presenter.parent.id), text: 'Show', class: "" } if params[:parent_id].present?
+      end
       @crumbs << { href: "", text: @presenter.title, class: "active" }
     end
 
