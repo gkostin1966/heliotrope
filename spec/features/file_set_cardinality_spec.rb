@@ -18,6 +18,7 @@ describe 'FileSet Cardinality' do
                       allow_hi_res: "yes",
                       alt_text: ["This is the alt text"],
                       caption: ["This is the caption"],
+                      captions: ["This is a closed caption"],
                       content_type: ["drawing", "illustration"],
                       contributor: ["Thomas, John (playwright, author)\nGuy, Other (lackey)"],
                       copyright_holder: "This is the © Copyright Holder",
@@ -25,6 +26,7 @@ describe 'FileSet Cardinality' do
                       creator: ["Smith, John (author, artist, photographer)\nCoauthor, Sally"],
                       credit_line: "Copyright by Some Person...",
                       date_published: ["2017-01-01"],
+                      descriptions: ["This is a visual description"],
                       display_date: ["circa. 2000"],
                       doi: "",
                       hdl: "",
@@ -83,6 +85,10 @@ describe 'FileSet Cardinality' do
       expect(doc.caption).to match_array(['This is the caption'])
       expect(find('#file_set_caption')[:class]).not_to include 'multi-text-field'
 
+      expect(cover.captions).to match_array(['This is a closed caption'])
+      expect(doc.captions).to eql 'This is a closed caption'
+      expect(find('#file_set_captions')[:class]).not_to include 'multi-text-field'
+
       expect(cover.content_type).to match_array(['drawing', 'illustration'])
       expect(doc.content_type).to match_array(['drawing', 'illustration'])
       expect(find('#file_set_content_type')[:class]).to include 'multi-text-field'
@@ -116,6 +122,10 @@ describe 'FileSet Cardinality' do
       expect(doc.date_published).to match_array(["2017-01-01"])
       # Apparently we don't have date_published on the form? Seems like we should?
       expect(page).not_to have_selector '#file_set_date_published'
+
+      expect(cover.descriptions).to match_array(['This is a visual description'])
+      expect(doc.descriptions).to eql 'This is a visual description'
+      expect(find('#file_set_descriptions')[:class]).not_to include 'multi-text-field'
 
       expect(cover.display_date).to match_array(['circa. 2000'])
       expect(doc.display_date).to match_array(['circa. 2000'])
