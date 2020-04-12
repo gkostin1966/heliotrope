@@ -30,6 +30,9 @@ describe SolrDocument do
   it { is_expected.to respond_to(:hdl) }
   it { is_expected.to respond_to(:has_model) }
   it { is_expected.to respond_to(:holding_contact) }
+  it { is_expected.to respond_to(:model_parent_noid) }
+  it { is_expected.to respond_to(:model_metadata_json) }
+
 
   # Monograph
   it { is_expected.to respond_to(:creator) }
