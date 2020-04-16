@@ -1,13 +1,33 @@
+<script>
+  $(document).ready(function() {
+    setupVideoAnalytics();
+  });
+
+  function setupVideoAnalytics() {
+    if (typeof(ga) == typeof(Function)) {
+      var video = $('#video').get(0)
+      video.addEventListener("play", function() {
+        press_tracker_event('e_reader', 'play_video', window.location.href);
+      });
+      video.addEventListener("pause", function() {
+        press_tracker_event('e_reader', 'stop_video', window.location.href);
+      });
+    }
+  }
+</script>
+
 <video id="video"
        preload="metadata"
        data-able-player
+       data-root-path="<%= root_url.split('?')[0] %>"
        data-include-transcript="false"
        data-allow-fullscreen="false"
-       poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>">
-  <source src="<%= hyrax.download_path(file_set.id, file: 'webm') %>" type="video/webm" />
-  <source src="<%= hyrax.download_path(file_set.id, file: 'mp4') %>" type="video/mp4" />
-  <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
-    <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'captions_vtt') %>" srclang="en" label="English"  />
+       poster="<%= hyrax.download_path(file_set, file: 'jpeg') %>">
+  <!--  NOTE: The derivatives of the original file are downloaded and different browsers want different formats. -->
+  <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
+  <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
+  <% if file_set.closed_captions.present? %>
+    <track kind="captions" src="<%= hyrax.download_path(file_set, file: 'captions_vtt') %>" srclang="en" label="English"  />
   <% end %>
   <% if file_set.visual_descriptions.present? %>
     <track kind="descriptions" src="<%= hyrax.download_path(file_set, file: 'descriptions_vtt') %>" srclang="en" label="English"  />
@@ -15,21 +35,4 @@
   Your browser does not support the video tag.
 </video>
 
-<script>
-    $(document).ready(function() {
-      setupVideoAnalytics();
-    });
 
-    function setupVideoAnalytics() {
-      if (typeof(ga) == typeof(Function)) {
-        var video = $('#video').get(0)
-        video.addEventListener("play", function() {
-          press_tracker_event('e_reader', 'play_video', window.location.href);
-        });
-        video.addEventListener("pause", function() {
-          press_tracker_event('e_reader', 'stop_video', window.location.href);
-        });
-      }
-    }
-
-</script>
