@@ -9,6 +9,5 @@
 //= require Control.FullScreen
 // Able Player stuff
 //= require js.cookie
-//= require modernizr.custom
 // `disable_chrome_media_download_button.js` in `./common` requires bowser
 //= require 'bowser.min'
