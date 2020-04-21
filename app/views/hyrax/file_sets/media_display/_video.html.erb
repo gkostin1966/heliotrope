@@ -9,7 +9,6 @@
        data-root-path="<%= root_url.split('?')[0] %>"
        data-speed-icons="arrows"
        data-include-transcript="true"
-       data-transcript-div="video-transcript-container"
        poster="<%= hyrax.download_path(file_set, file: 'jpeg') %>">
   <!--  NOTE: The derivatives of the original file are downloaded and different browsers want different formats. -->
   <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />

@@ -3,7 +3,6 @@
 <% else %>
   <figure title="<%= @presenter.alt_text.first %>">
     <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
-    <div id="video-transcript-container"></div>
     <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
     <% if @presenter.allow_download?  %>
         <div class="text-center">
