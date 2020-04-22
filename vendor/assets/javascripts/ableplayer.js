@@ -6571,8 +6571,8 @@ if (thisObj.useTtml && (trackSrc.endsWith('.xml') || trackText.startsWith('<?xml
 		// define a few variables
 		volumeSliderId = this.mediaId + '-volume-slider';
 		volumeHelpId = this.mediaId + '-volume-help';
-		this.volumeTrackHeight = 50; // must match CSS height for .able-volume-slider
-		this.volumeHeadHeight = 7; // must match CSS height for .able-volume-head
+		this.volumeTrackHeight = 50;
+		this.volumeHeadHeight = 5; // originally 7 (see also ableplayer-boostrap-sprockets.css)
 		this.volumeTickHeight = this.volumeTrackHeight / 10;
 
 		this.$volumeSlider = $('<div>',{

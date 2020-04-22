@@ -1,0 +1,19 @@
+/*
+ * bootstrap-sprockets messes up the font used by able player
+ * hence we have to override ableplayer.css to fix it
+ *
+ * NOTE: changes have also been made to some of the hard coded constants in ableplayer.js
+ */
+
+.able-volume-slider {
+  width: 34px;
+  height: 70px; /* originally 50px (see also ableplayer.js around line 6575) */
+  background-color: #464646; /* same as .able-controller */
+  padding: 10px 0;
+  position: absolute;
+  right: 0px;
+  top: -74px;
+  display: block;
+  z-index: 9100;
+}
+

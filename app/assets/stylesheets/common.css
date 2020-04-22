@@ -4,4 +4,6 @@
  *= require L.Control.Pan
  *= require Control.FullScreen
  *= require ableplayer
+ *  Note: ableplayer-bootstrap-sprockets overrides ableplayer
+ *= require ableplayer-bootstrap-sprockets
  */
