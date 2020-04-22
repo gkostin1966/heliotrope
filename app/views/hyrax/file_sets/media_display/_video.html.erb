@@ -6,12 +6,16 @@
 <video id="video"
        preload="auto"
        data-able-player
-       data-include-transcript="false"
+       data-root-path="<%= root_url.split('?')[0] %>"
+       data-speed-icons="arrows"
+       data-include-transcript="true"
+       data-transcript-div="video-transcript-container"
        poster="<%= hyrax.download_path(file_set, file: 'jpeg') %>">
+  <!--  NOTE: The derivatives of the original file are downloaded and different browsers want different formats. -->
   <source src="<%= hyrax.download_path(file_set, file: 'webm') %>" type="video/webm" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
-  <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
-    <track kind="subtitles" src="<%= hyrax.download_path(file_set, file: 'captions_vtt') %>" srclang="en" label="English"  />
+  <% if file_set.closed_captions.present? %>
+    <track kind="captions" src="<%= hyrax.download_path(file_set, file: 'captions_vtt') %>" srclang="en" label="English"  />
   <% end %>
   <% if file_set.visual_descriptions.present? %>
     <track kind="descriptions" src="<%= hyrax.download_path(file_set, file: 'descriptions_vtt') %>" srclang="en" label="English"  />

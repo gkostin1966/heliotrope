@@ -11,7 +11,7 @@
 // about supported directives.
 //
 //= require common
-//= require ableplayer_turbolinks
+//= require ableplayer
 //= require_tree ./common
 //= require dataTables/jquery.dataTables
 //= require jquery-ui/widgets/datepicker

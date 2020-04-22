@@ -39,7 +39,10 @@
 <audio id="audio"
        preload="auto"
        data-able-player
+       data-root-path="<%= root_url.split('?')[0] %>"
+       data-speed-icons="arrows"
        <%= raw file_set.transcript.present? ? 'data-transcript-div="audio-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
+  <!--  NOTE: The derivatives of the original file are downloaded and different browsers want different formats. -->
   <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
   <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
   <% if file_set.closed_captions.present? %>

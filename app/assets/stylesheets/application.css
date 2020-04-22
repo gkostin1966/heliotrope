@@ -17,7 +17,7 @@
  *= require jquery-ui/datepicker
  *= require cozy-sun-bear-main
  *= require idpselect
- * rails new <app> defaults...
- * require_tree .
- * require_self
+ *= require ableplayer
+ *  Note: ableplayer-bootstrap-sprockets overrides ableplayer
+ *= require ableplayer-bootstrap-sprockets
  */
