@@ -148,7 +148,7 @@ gem 'resque', '~> 1.26.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.7', require: 'resque_web'
 
-gem 'riiif', '1.4.1'
+gem 'riiif', '2.2.0'
 
 gem 'rsolr', '~> 2.0.1'
 
