@@ -24,7 +24,3 @@
 //= require_tree ./application
 //= require application_survey
 //= require hyrax
-// rails new <app> defaults ...
-// require rails-ujs
-// require turbolinks
-// require_tree .
