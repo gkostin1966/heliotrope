@@ -22,4 +22,4 @@ require('@rails/activestorage').start();
 // add the following line to app/javascript/packs/application.js:
 require('../channels');
 
-console.log('Hello World from Webpacker pack application');
+console.log('Hello World from Webpacker pack embed');
