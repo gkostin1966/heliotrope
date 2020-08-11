@@ -15,5 +15,8 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.0",
     "webpack-dev-server": "^3.11.0"
+  },
+  "scripts": {
+    "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
   }
 }
