@@ -11,9 +11,10 @@ AllCops:
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
-    - 'fulcrum/**/*'
     - 'db/**/*'
+    - 'fulcrum/**/*'
     - 'log/**/*'
+    - 'node_modules/**/*'
     - 'public/**/*'
     - 'ruumba/**/*'
     - 'solr/**/*'
