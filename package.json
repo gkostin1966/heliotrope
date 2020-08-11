@@ -10,6 +10,8 @@
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-loader": "^4.0.2",
     "webpack-dev-server": "^3.11.0"
   }
 }
