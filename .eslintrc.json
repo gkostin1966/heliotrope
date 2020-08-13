@@ -12,5 +12,16 @@
         "ecmaVersion": 11
     },
     "rules": {
-    }
+    },
+    "overrides": [
+        {
+            "files": ["*-test.js","*.spec.js"],
+            "rules": {
+                "no-unused-expressions": "off",
+                "no-undef": "off",
+                "no-unused-vars": "off",
+                "import/no-unresolved": "off"
+            }
+        }
+    ]
 }
