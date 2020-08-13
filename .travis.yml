@@ -19,6 +19,7 @@ before_script:
   - bin/bundle exec bin/travis
 script:
   - yarn lint
+  - yarn jest
   - rake ci
 rvm:
   - 2.5.8

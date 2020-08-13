@@ -25,3 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(document.createElement('div')),
   );
 });
+
+// For testing with jest and enzyme
+export default Hello;
