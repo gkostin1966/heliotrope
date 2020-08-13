@@ -17,6 +17,8 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.3.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.3",
     "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-loader": "^4.0.2",
@@ -34,6 +36,9 @@
     "moduleDirectories": [
       "node_modules",
       "app/javascript"
+    ],
+    "setupFilesAfterEnv": [
+      "./spec/javascript/setupTests.js"
     ]
   }
 }
