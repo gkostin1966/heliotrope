@@ -14,9 +14,6 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-
-import '../ableplayer/build/ableplayer'
-
+require('../ableplayer/build/ableplayer');
+require('../ableplayer/styles/ableplayer.css');
 console.log('Hello World from Webpacker pack ableplayer');
