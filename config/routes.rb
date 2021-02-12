@@ -234,6 +234,13 @@ Rails.application.routes.draw do
       end
     end
   end
+  EBOOKS_ID_CONSTRAINT = { id: /epub|pdf/i }.freeze
+  resources :monographs, only: [], path: '/concerns/monographs' do
+    resources :ebooks, only: %i[index show], constraints: EBOOKS_ID_CONSTRAINT do
+      resource :share_links, only: %i[show create] do
+      end
+    end
+  end
 
   post 'admin/stats/institution', controller: 'hyrax/admin/stats', action: :institution_report, as: :admin_stats_institution
   post 'admin/stats/counter',     controller: 'hyrax/admin/stats', action: :counter_report, as: :admin_stats_counter_reports
