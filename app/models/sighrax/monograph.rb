@@ -102,6 +102,14 @@ module Sighrax
       Greensub::Component.find_by(noid: noid).blank?
     end
 
+    def restricted?
+      Greensub::Component.find_by(noid: noid).present?
+    end
+
+    def open_access?
+      /^yes$/i.match?(Array(data['open_access_tesim']).first)
+    end
+
     private
 
       def initialize(noid, data)
