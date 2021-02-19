@@ -84,7 +84,11 @@
                 </a>
               <% else %>
                 <a id="monograph-read-btn"
-                   href="<%= epub_path(@presenter.reader_ebook) %>"
+                 <% if @presenter.epub? %>
+                   href="<%= epub_path(@presenter.epub_id) %>"
+                 <% else %>
+                  href="<%= pdf_ebook_path(@presenter.pdf_ebook_id) %>"
+                <% end %>
                    class="btn btn-default"
                    data-turbolinks="false">
                    <%= t('monograph_catalog.index.read_book') %>

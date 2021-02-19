@@ -158,7 +158,26 @@ Rails.application.routes.draw do
   get 'epubs_download_chapter/:id', controller: :e_pubs, action: :download_chapter, as: :epub_download_chapter
   get 'epubs_download_interval/:id', controller: :e_pubs, action: :download_interval, as: :epub_download_interval
   get 'epubs_search/:id', controller: :e_pubs, action: :search, as: :epub_search
-  get 'epubs_share_link/:id', controller: :e_pubs, action: :share_link, as: :epub_share_link
+  # get 'epubs_share_link/:id', controller: :e_pubs, action: :share_link, as: :epub_share_link
+
+  resources :pdf_ebooks, only: :show do
+    member do
+      get :download
+    end
+  end
+  get 'pdf_ebooks/:id/*file', controller: :pdf_ebooks, action: :file, as: :pdf_ebook_file
+
+  scope :jwt do
+    resources :monographs, only: [] do
+      resources :share_links, only: %i[show new]
+    end
+    resources :epubs, only: %i[] do
+      resources :share_link, only: %i[new show]
+    end
+    resources :pdf_ebooks, only: %i[] do
+      resources :share_link, only: %i[new show]
+    end
+  end
 
   get 'embed', controller: :embed, action: :show
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
