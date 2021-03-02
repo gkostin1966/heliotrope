@@ -14,7 +14,7 @@ RSpec.describe EntityPolicy do
 
     let(:downloadable) { false }
 
-    before { allow(Sighrax).to receive(:downloadable?).with(target).and_return(downloadable) }
+    before { allow(target).to receive(:downloadable?).and_return(downloadable) }
 
     it { is_expected.to be false }
 
@@ -40,7 +40,7 @@ RSpec.describe EntityPolicy do
             let(:ability_can_edit) { false }
             let(:tombstone) { true }
 
-            before { allow(Sighrax).to receive(:tombstone?).with(target).and_return(tombstone) }
+            before { allow(target).to receive(:tombstone?).and_return(tombstone) }
 
             it { is_expected.to be false }
 
@@ -48,7 +48,7 @@ RSpec.describe EntityPolicy do
               let(:tombstone) { false }
               let(:allow_download) { false }
 
-              before { allow(Sighrax).to receive(:allow_download?).with(target).and_return(allow_download) }
+              before { allow(target).to receive(:allow_download?).and_return(allow_download) }
 
               it { is_expected.to be false }
 
@@ -56,7 +56,7 @@ RSpec.describe EntityPolicy do
                 let(:allow_download) { true }
                 let(:published) { false }
 
-                before { allow(Sighrax).to receive(:published?).with(target).and_return(published) }
+                before { allow(target).to receive(:published?).and_return(published) }
 
                 it { is_expected.to be false }
 
@@ -72,20 +72,20 @@ RSpec.describe EntityPolicy do
                     let(:instance_of_asset) { false }
                     let(:open_access) { true }
 
-                    before { allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access) }
+                    before { allow(parent).to receive(:open_access?).and_return(open_access) }
 
                     it { is_expected.to be true }
 
                     context 'unrestricted' do
                       let(:open_access) { false }
-                      let(:restricted) { false }
+                      let(:unrestricted) { true }
 
-                      before { allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted) }
+                      before { allow(parent).to receive(:unrestricted?).and_return(unrestricted) }
 
                       it { is_expected.to be true }
 
                       context 'restricted' do
-                        let(:restricted) { true }
+                        let(:unrestricted) { false }
                         let(:access) { false }
 
                         before { allow(Sighrax).to receive(:access?).with(actor, parent).and_return(access) }

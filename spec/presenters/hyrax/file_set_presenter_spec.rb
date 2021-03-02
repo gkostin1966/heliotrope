@@ -21,12 +21,12 @@ RSpec.describe Hyrax::FileSetPresenter do
     subject { presenter.tombstone? }
 
     let(:fileset_doc) { SolrDocument.new(id: 'file_set_id', has_model_ssim: ['FileSet']) }
-    let(:entity) { 'entity' }
+    let(:entity) { instance_double(Sighrax::Entity, 'entity') }
     let(:tombstone) { 'boolean' }
 
     before do
-      allow(Sighrax).to receive(:from_noid).with('file_set_id').and_return(entity)
-      allow(Sighrax).to receive(:tombstone?).with(entity).and_return(tombstone)
+      allow(Sighrax).to receive(:from_presenter).with(presenter).and_return(entity)
+      allow(entity).to receive(:tombstone?).and_return(tombstone)
     end
 
     it { is_expected.to be tombstone }
@@ -96,13 +96,12 @@ RSpec.describe Hyrax::FileSetPresenter do
         end
 
         context 'tombstone with allow_display_after_expiration == "high-res"' do
-          let(:entity) { 'entity' }
-          let(:tombstone) { 'boolean' }
+          let(:entity) { instance_double(Sighrax::Entity, 'entity') }
           let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
 
           before do
-            allow(Sighrax).to receive(:from_noid).with('fs').and_return(entity)
-            allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+            allow(Sighrax).to receive(:from_presenter).with(presenter).and_return(entity)
+            allow(entity).to receive(:tombstone?).and_return(true)
           end
 
           it 'allows high-res in spite of the missing allow_hi_res_ssim value' do
@@ -124,13 +123,12 @@ RSpec.describe Hyrax::FileSetPresenter do
         end
 
         context 'tombstone with allow_display_after_expiration == "high-res"' do
-          let(:entity) { 'entity' }
-          let(:tombstone) { 'boolean' }
+          let(:entity) { instance_double(Sighrax::Entity, 'entity') }
           let(:fileset_doc) { SolrDocument.new(id: 'fs', has_model_ssim: ['FileSet'], allow_display_after_expiration_ssim: 'high-res') }
 
           before do
-            allow(Sighrax).to receive(:from_noid).with('fs').and_return(entity)
-            allow(Sighrax).to receive(:tombstone?).with(entity).and_return(true)
+            allow(Sighrax).to receive(:from_presenter).with(presenter).and_return(entity)
+            allow(entity).to receive(:tombstone?).and_return(true)
           end
 
           it 'allows high-res in spite of the original allow_hi_res_ssim value' do

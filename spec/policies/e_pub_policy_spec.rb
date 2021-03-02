@@ -15,6 +15,7 @@ RSpec.describe EPubPolicy do
   let(:products) { [] }
 
   let(:open_access) { false }
+  let(:unrestricted) { true }
   let(:share) { false }
   let(:is_a_user) { false }
   let(:ability_can_read) { false }
@@ -29,9 +30,9 @@ RSpec.describe EPubPolicy do
     allow(actor).to receive(:platform_admin?).and_return(platform_admin)
     allow(Sighrax).to receive(:ability_can?).with(actor, :read, parent).and_return(ability_can_read)
     allow(Sighrax).to receive(:ability_can?).with(actor, :edit, parent).and_return(ability_can_edit)
-    allow(Sighrax).to receive(:open_access?).with(parent).and_return(open_access)
-    allow(Sighrax).to receive(:published?).with(parent).and_return(published)
-    allow(Sighrax).to receive(:restricted?).with(parent).and_return(restricted)
+    allow(parent).to receive(:open_access?).and_return(open_access)
+    allow(parent).to receive(:published?).and_return(published)
+    allow(parent).to receive(:unrestricted?).and_return(unrestricted)
     allow(Greensub::Component).to receive(:find_by).with(noid: noid).and_return(component)
     allow(Incognito).to receive(:allow_ability_can?).with(actor).and_return(allow_ability_can)
     allow(Incognito).to receive(:allow_platform_admin?).with(actor).and_return(allow_platform_admin)
@@ -42,7 +43,7 @@ RSpec.describe EPubPolicy do
     subject { e_pub_policy.show? }
 
     context 'unrestricted unpublished' do
-      let(:restricted) { false }
+      let(:unrestricted) { true }
       let(:published) { false }
 
       it { is_expected.to be false }
@@ -165,7 +166,7 @@ RSpec.describe EPubPolicy do
     end
 
     context 'restricted published' do
-      let(:restricted) { true }
+      let(:unrestricted) { false }
       let(:published) { true }
 
       it { is_expected.to be false }

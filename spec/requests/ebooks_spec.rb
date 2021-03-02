@@ -2,121 +2,106 @@
 
 require 'rails_helper'
 
-RSpec.describe "PDF EBooks", type: :request do
-  describe "GET /ebooks/:id/download" do
-    subject { get download_ebook_path(noid) }
+RSpec.describe "Download Ebooks", type: :request do
+  describe 'ebook download' do
+    subject { get download_ebook_path(ebook.id) }
 
-    let(:actor) { instance_double(Anonymous) }
-    let(:noid) { 'validnoid' }
-    let(:entity) { instance_double(Sighrax::Entity, noid: noid, data: {}, valid?: true, title: 'title') }
+    let(:press) { create(:press) }
+    let(:monograph) { create(:public_monograph, press: press.subdomain) }
+    let(:ebook) { create(:public_file_set) }
+    let(:ebook_fr) { create(:featured_representative, work_id: monograph.id, file_set_id: ebook.id, kind: kind) }
     let(:policy) { instance_double(EntityPolicy, download?: download) }
     let(:download) { false }
-    let(:press) { instance_double(Press, name: 'name') }
     let(:press_policy) { instance_double(PressPolicy, watermark_download?: watermark_download) }
     let(:watermark_download) { false }
+    let(:counter_service) { double("counter_service") }
 
     before do
-      allow(Sighrax).to receive(:from_noid).with(noid).and_return(entity)
-      allow(Sighrax).to receive(:press).with(entity).and_return(press)
-      allow(EntityPolicy).to receive(:new).with(anything, entity).and_return(policy)
-      allow(PressPolicy).to receive(:new).with(anything, press).and_return(press_policy)
+      monograph.ordered_members = [ebook]
+      monograph.save
+      ebook.save
+      ebook_fr
+      allow(EntityPolicy).to receive(:new).and_return(policy)
+      allow(PressPolicy).to receive(:new).and_return(press_policy)
+      allow(CounterService).to receive(:from).and_return(counter_service)
+      allow(counter_service).to receive(:count).with(request: 1)
     end
 
-    it do
-      expect { subject }.not_to raise_error
-      expect(response).to have_http_status(:unauthorized)
-      expect(response).to render_template('hyrax/base/unauthorized')
-    end
-
-    context 'download?' do
-      let(:download) { true }
+    context 'when epub' do
+      let(:kind) { 'epub' }
 
       it do
         expect { subject }.not_to raise_error
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to(hyrax.download_path(noid))
+        expect(response).to have_http_status(:unauthorized)
+        expect(response).to render_template('hyrax/base/unauthorized')
+        expect(CounterService).not_to have_received(:from)
+        expect(counter_service).not_to have_received(:count)
       end
 
-      context 'watermarkable?' do
-        before { allow(Sighrax).to receive(:watermarkable?).with(entity).and_return(true) }
+      context 'when download' do
+        let(:download) { true }
 
         it do
           expect { subject }.not_to raise_error
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(hyrax.download_path(noid))
+          expect(response).to redirect_to(hyrax.download_path(ebook.id))
+          expect(CounterService).not_to have_received(:from)
+          expect(counter_service).not_to have_received(:count)
         end
 
-        describe 'watermark_download?' do
+        context 'when watermark download' do
           let(:watermark_download) { true }
-          let(:entity) do
-            instance_double(
-              Sighrax::Asset,
-              noid: noid,
-              data: {},
-              valid?: true,
-              parent: parent,
-              title: 'title',
-              resource_token: 'resource_token',
-              media_type: 'application/pdf',
-              filename: 'clippath.pdf'
-            )
+
+          it do
+            expect { subject }.not_to raise_error
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(hyrax.download_path(ebook.id))
+            expect(CounterService).not_to have_received(:from)
+            expect(counter_service).not_to have_received(:count)
           end
-          let(:parent) { instance_double(Sighrax::Entity, title: 'title') }
-          let(:entity_presenter) { double("entity_presenter") }
-          let(:counter_service) { double("counter_service") }
+        end
+      end
+    end
 
-          before do
-            allow(entity).to receive(:content).and_return(File.read(Rails.root.join(fixture_path, entity.filename)))
-            allow(Sighrax).to receive(:hyrax_presenter).with(entity).and_return(entity_presenter)
-            allow(CounterService).to receive(:from).and_return(counter_service)
-            allow(counter_service).to receive(:count).with(request: 1).and_return(true)
-          end
+    context 'when pdf' do
+      let(:kind) { 'pdf_ebook' }
 
-          context 'presenter returns an authors value' do
-            let(:presenter) do
-              instance_double(Hyrax::MonographPresenter, authors?: true,
-                                                         authors: 'creator blah',
-                                                         creator: ['Creator, A.', 'Destroyer, Z.'],
-                                                         title: 'title',
-                                                         date_created: ['created'],
-                                                         based_near_label: ['Somewhere'],
-                                                         citable_link: 'www.example.com/something',
-                                                         publisher: ['publisher'])
-            end
+      it do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:unauthorized)
+        expect(response).to render_template('hyrax/base/unauthorized')
+        expect(CounterService).not_to have_received(:from)
+        expect(counter_service).not_to have_received(:count)
+      end
 
-            it 'uses it in the watermark' do
-              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
-              expect { subject }.not_to raise_error
-              expect(response).to have_http_status(:ok)
-              expect(response.body).not_to be_empty
-              # watermarking will change the file content and PDF 'producer' metadata
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
-              expect(response.body).to include('Producer (Ruby CombinePDF')
-              expect(response.header['Content-Type']).to eq(entity.media_type)
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
-              expect(counter_service).to have_received(:count).with(request: 1)
-            end
-          end
+      context 'when download' do
+        let(:download) { true }
 
-          context 'presenter does not return an authors value' do
-            let(:presenter) { instance_double(Hyrax::MonographPresenter, authors?: false,
-                                                                         creator: [],
-                                                                         title: 'title',
-                                                                         date_created: ['created'],
-                                                                         based_near_label: ['Somewhere'],
-                                                                         citable_link: 'www.example.com/something',
-                                                                         publisher: ['publisher']) }
+        it do
+          expect { subject }.not_to raise_error
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(hyrax.download_path(ebook.id))
+          expect(CounterService).not_to have_received(:from)
+          expect(counter_service).not_to have_received(:count)
+        end
 
-            it "doesn't raise an error" do
-              allow(Sighrax).to receive(:hyrax_presenter).with(parent).and_return(presenter)
-              expect { subject }.not_to raise_error
-              expect(response).to have_http_status(:ok)
-              expect(response.body).not_to be_empty
-              expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, entity.filename))
-              expect(response.header['Content-Type']).to eq(entity.media_type)
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{entity.filename}\"")
-              expect(counter_service).to have_received(:count).with(request: 1)
-            end
+        context 'when watermark download' do
+          let(:watermark_download) { true }
+          let(:ebook) { create(:public_file_set, content: File.open(File.join(fixture_path, 'clippath.pdf'))) }
+          let(:pdf_ebook) { Sighrax.from_noid(ebook.id) }
+
+          it 'without author(s) no error raised' do
+            expect { subject }.not_to raise_error
+            expect(response).to have_http_status(:ok)
+            expect(response.body).not_to be_empty
+            expect(CounterService).to have_received(:from)
+            expect(counter_service).to have_received(:count)
+            expect(response.header['Content-Type']).to eq(pdf_ebook.media_type)
+            expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{pdf_ebook.file_name}\"")
+
+            # watermarking will change the file content and PDF 'producer' metadata
+            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, pdf_ebook.file_name))
+            expect(response.body).to include('Producer (Ruby CombinePDF')
           end
         end
       end

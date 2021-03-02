@@ -6,7 +6,7 @@ class EntityPolicy < ResourcePolicy
   end
 
   def download? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    value = Sighrax.downloadable?(target)
+    value = target.downloadable?
     debug_log("downloadable? #{value}")
     return false unless value
 
@@ -18,15 +18,15 @@ class EntityPolicy < ResourcePolicy
     debug_log("ability_can(:edit)? #{value}")
     return true if value
 
-    value = Sighrax.tombstone?(target)
+    value = target.tombstone?
     debug_log("tombstone? #{value}")
     return false if value
 
-    value = Sighrax.allow_download?(target)
+    value = target.allow_download?
     debug_log("allow_download? #{value}")
     return false unless value
 
-    value = Sighrax.published?(target)
+    value = target.published?
     debug_log("published? #{value}")
     return false unless value
 
@@ -34,13 +34,13 @@ class EntityPolicy < ResourcePolicy
     debug_log("instance_of?(Sighrax::Asset) #{value}")
     return true if value
 
-    value = Sighrax.open_access?(target.parent)
+    value = target.parent.open_access?
     debug_log("open_access? #{value}")
     return true if value
 
-    value = Sighrax.restricted?(target.parent)
-    debug_log("restricted? #{value}")
-    return true unless value
+    value = target.parent.unrestricted?
+    debug_log("unrestricted? #{value}")
+    return true if value
 
     value = Sighrax.access?(actor, target.parent)
     debug_log("access? #{value}")

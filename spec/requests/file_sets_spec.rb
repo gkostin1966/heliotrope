@@ -26,8 +26,9 @@ RSpec.describe "FileSets", type: :request do
   context 'published monograph file set' do
     let(:press) { create(:press) }
     let(:monograph) { create(:public_monograph, press: press.subdomain) }
-    let(:file_set) { create(:public_file_set, resource_type: [resource_type]) }
+    let(:file_set) { create(:public_file_set, resource_type: [resource_type], permissions_expiration_date: permissions_expiration_date) }
     let(:resource_type) { '' }
+    let(:permissions_expiration_date) { nil }
 
     before do
       monograph.ordered_members << file_set
@@ -59,7 +60,7 @@ RSpec.describe "FileSets", type: :request do
       end
 
       context 'tombstone' do
-        before { allow(Sighrax).to receive(:tombstone?).with(anything).and_return(true) }
+        let(:permissions_expiration_date) { "1999-01-01" }
 
         it do
           get hyrax_file_set_path(file_set.id)

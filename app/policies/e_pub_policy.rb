@@ -14,43 +14,41 @@ class EPubPolicy < ResourcePolicy
     debug_log("platform_admin? #{value}")
     return true if value
 
-    value = Sighrax.published?(target)
+    value = target.published?
     debug_log("published? #{value}")
     if value
-      value = Sighrax.open_access?(target)
+      value = target.open_access?
       debug_log("open_access? #{value}")
       return true if value
 
-      value = Sighrax.restricted?(target)
-      debug_log("restricted? #{value}")
-      if value
-        value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
-        debug_log("ability_can(:edit)? #{value}")
-        return true if value
+      value = target.unrestricted?
+      debug_log("unrestricted? #{value}")
+      return true if value
 
-        debug_log("share #{share}")
-        return true if share
+      value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
+      debug_log("ability_can(:edit)? #{value}")
+      return true if value
 
-        component = Greensub::Component.find_by(noid: target.noid)
-        debug_log("component products: #{component.products.count}")
-        component.products.each { |product| debug_log("component product: #{product.identifier}") }
+      debug_log("share #{share}")
+      return true if share
 
-        allow_read_products = Sighrax.allow_read_products
-        debug_log("allow read products: #{allow_read_products.count}")
-        allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
-        value = (allow_read_products & component.products).any?
-        debug_log("allow_read_products_intersect_component_products_any? #{value}")
-        return true if value
+      component = Greensub::Component.find_by(noid: target.noid)
+      debug_log("component products: #{component.products.count}")
+      component.products.each { |product| debug_log("component product: #{product.identifier}") }
 
-        products = Sighrax.actor_products(actor)
-        debug_log("actor products: #{products.count}")
-        products.each { |product| debug_log("actor product: #{product.identifier}") }
-        value = (products & component.products).any?
-        debug_log("actor_products_intersect_component_products_any? #{value}")
-        value
-      else
-        true
-      end
+      allow_read_products = Sighrax.allow_read_products
+      debug_log("allow read products: #{allow_read_products.count}")
+      allow_read_products.each { |product| debug_log("allow read product: #{product.identifier}") }
+      value = (allow_read_products & component.products).any?
+      debug_log("allow_read_products_intersect_component_products_any? #{value}")
+      return true if value
+
+      products = Sighrax.actor_products(actor)
+      debug_log("actor products: #{products.count}")
+      products.each { |product| debug_log("actor product: #{product.identifier}") }
+      value = (products & component.products).any?
+      debug_log("actor_products_intersect_component_products_any? #{value}")
+      value
     else
       value = Sighrax.ability_can?(actor, :edit, target) && Incognito.allow_ability_can?(actor)
       debug_log("ability_can(:edit)? #{value}")
