@@ -2,7 +2,7 @@
 
 # This should be removed. It relies on parsed epub/pdf
 # table of contents and is slow. Instead we
-# should be using EBookIntervalPresenter
+# should be using EbookIntervalPresenter
 # see HELIO-3277
 
 class RemoveMeEPubIntervalPresenter < ApplicationPresenter

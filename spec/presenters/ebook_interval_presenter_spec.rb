@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EBookIntervalPresenter do
+RSpec.describe EbookIntervalPresenter do
   describe 'attributes' do
     subject(:presenter) do
       described_class.new({

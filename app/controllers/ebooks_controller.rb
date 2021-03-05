@@ -1,29 +1,34 @@
 # frozen_string_literal: true
 
 class EbooksController < CheckpointController
-  include Watermark::Watermarkable
-
   before_action :setup
+
+  def reader
+    raise NotAuthorizedError unless @policy.reader?
+    case @ebook
+    when Sighrax::EpubEbook
+      return redirect_to(epub_ebook_path(params[:id]))
+    when Sighrax::PdfEbook
+      return redirect_to(pdf_ebook_path(params[:id]))
+    end
+    raise NotAuthorizedError
+  end
 
   def download
     raise NotAuthorizedError unless @policy.download?
-    return redirect_to(hyrax.download_path(params[:id])) unless Sighrax.watermarkable?(@entity) && @press_policy.watermark_download?
-
-    begin
-      CounterService.from(self, Sighrax.hyrax_presenter(@entity)).count(request: 1)
-      send_data watermark_pdf(@entity, @entity.filename), type: @entity.media_type, filename: @entity.filename
-    rescue StandardError => e
-      Rails.logger.error "EbooksController.download raised #{e}"
-      head :no_content
+    case @ebook
+    when Sighrax::EpubEbook
+      return redirect_to(download_epub_ebook_path(params[:id]))
+    when Sighrax::PdfEbook
+      return redirect_to(download_pdf_ebook_path(params[:id]))
     end
+    raise NotAuthorizedError
   end
 
   private
 
     def setup
-      @entity = Sighrax.from_noid(params[:id])
-      @policy = EntityPolicy.new(current_actor, @entity)
-      @press = Sighrax.press(@entity)
-      @press_policy = PressPolicy.new(current_actor, @press)
+      @ebook = Sighrax.from_noid(params[:id])
+      @policy = EbookPolicy.new(current_actor, @ebook)
     end
 end

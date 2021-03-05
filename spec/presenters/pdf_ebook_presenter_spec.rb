@@ -47,7 +47,7 @@ RSpec.describe PDFEbookPresenter do
         EbookTableOfContentsCache.create(noid: pdf_ebook.id, toc: [{ title: "A", depth: 1, cfi: "/6/2[Chapter01]!/4/1:0", download?: false }].to_json)
       end
 
-      it { is_expected.to be_an_instance_of(EBookIntervalPresenter) }
+      it { is_expected.to be_an_instance_of(EbookIntervalPresenter) }
     end
   end
 end

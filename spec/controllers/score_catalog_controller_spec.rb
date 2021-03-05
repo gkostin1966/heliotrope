@@ -23,7 +23,7 @@ RSpec.describe ScoreCatalogController, type: :controller do
         expect(response).to be_successful
         expect(response).to render_template('score_catalog/index')
         expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::ScorePresenter
-        expect(controller.instance_variable_get(:@ebook_download_presenter).class).to eq EBookDownloadPresenter
+        expect(controller.instance_variable_get(:@ebook_download_presenter).class).to eq EbookDownloadPresenter
       end
     end
 
