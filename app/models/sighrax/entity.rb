@@ -41,7 +41,7 @@ module Sighrax
 
     protected
 
-      attr_reader :data
+      attr_reader :data, :reload
 
       def type
         @type ||= /^Sighrax::(.+$)/.match(self.class.to_s)[1].to_sym
@@ -57,9 +57,10 @@ module Sighrax
 
     private
 
-      def initialize(noid, data)
+      def initialize(noid, data, reload = true)
         @noid = noid
         @data = data
+        @reload = reload
       end
   end
 end

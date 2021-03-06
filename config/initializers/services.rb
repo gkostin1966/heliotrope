@@ -65,3 +65,5 @@ Services.register(:handle_service) do
     ssl_verify: Settings.handle_service.ssl_verify
   )
 end
+
+Services.register(:solr_document_cache) { SolrDocumentCache.new(5) } # time to live 5 minutes

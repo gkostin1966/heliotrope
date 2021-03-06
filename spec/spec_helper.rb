@@ -41,6 +41,7 @@ RSpec.configure do |config|
 
   config.before do
     ActiveFedora::Cleaner.clean! if ActiveFedora::Base.count > 0
+    Services.solr_document_cache.clear
   end
 
   # System specs (new in rails 5.1) use headless chrome and Capybara

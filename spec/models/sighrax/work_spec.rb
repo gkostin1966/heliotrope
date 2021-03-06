@@ -4,10 +4,11 @@ require 'rails_helper'
 
 RSpec.describe Sighrax::Work, type: :model do
   context 'instance' do
-    subject { described_class.send(:new, noid, data) }
+    subject { described_class.send(:new, noid, data, reload) }
 
     let(:noid) { 'validnoid' }
     let(:data) { {} }
+    let(:reload) { true }
 
     it 'has expected values' do
       is_expected.to be_an_instance_of described_class
@@ -15,6 +16,25 @@ RSpec.describe Sighrax::Work, type: :model do
       expect(subject.resource_type).to eq :Work
       expect(subject.parent).to be_an_instance_of Sighrax::NullEntity
       expect(subject.children).to be_empty
+    end
+
+    context 'children' do
+      let(:data) { { 'ordered_member_ids_ssim' => [noid] } }
+      let(:child) { double('child') }
+      let(:cache_child) { double('cache_child') }
+
+      before do
+        allow(Sighrax).to receive(:from_noid).with(noid, true).and_return(child)
+        allow(Sighrax).to receive(:from_noid).with(noid, false).and_return(cache_child)
+      end
+
+      it { is_expected.to contain_exactly(child) }
+
+      context 'cache children' do
+        let(:reload) { false }
+
+        it { is_expected.to contain_exactly(cache_child) }
+      end
     end
   end
 

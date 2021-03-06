@@ -132,7 +132,7 @@ module Sighrax
     private
 
       def initialize(noid)
-        super(noid, {})
+        super(noid, {}, false)
       end
   end
 end

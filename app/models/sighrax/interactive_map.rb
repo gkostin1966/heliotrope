@@ -6,8 +6,8 @@ module Sighrax
 
     private
 
-      def initialize(noid, data)
-        super(noid, data)
+      def initialize(noid, data, reload = true)
+        super(noid, data, reload)
       end
   end
 end

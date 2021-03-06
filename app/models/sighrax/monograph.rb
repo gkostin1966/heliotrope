@@ -11,7 +11,7 @@ module Sighrax
     end
 
     def cover_representative
-      @cover_representative ||= Sighrax.from_noid(scalar('representative_id_ssim'))
+      @cover_representative ||= Sighrax.from_noid(Array(data['representative_id_ssim']).first, reload)
     end
 
     def description
@@ -19,7 +19,7 @@ module Sighrax
     end
 
     def epub_featured_representative
-      @epub_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id)
+      @epub_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'epub')&.file_set_id, reload)
     end
 
     def identifier
@@ -50,7 +50,7 @@ module Sighrax
     end
 
     def pdf_ebook_featured_representative
-      @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id)
+      @pdf_ebook_featured_representative ||= Sighrax.from_noid(FeaturedRepresentative.find_by(work_id: noid, kind: 'pdf_ebook')&.file_set_id, reload)
     end
 
     def products
@@ -90,8 +90,8 @@ module Sighrax
 
     private
 
-      def initialize(noid, data)
-        super(noid, data)
+      def initialize(noid, data, reload = true)
+        super(noid, data, reload)
       end
   end
 end

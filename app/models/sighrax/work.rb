@@ -10,7 +10,7 @@ module Sighrax
       noid_entity_map = {}
       query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(children_noids)
       (ActiveFedora::SolrService.query(query, rows: children_noids.count) || []).each do |solr_doc|
-        noid_entity_map[solr_doc.id] = ::Sighrax.from_solr_document(solr_doc)
+        noid_entity_map[solr_doc.id] = ::Sighrax.from_solr_document(solr_doc, reload)
       end
 
       # Preserve order of the members
@@ -23,8 +23,8 @@ module Sighrax
         vector('ordered_member_ids_ssim')
       end
 
-      def initialize(noid, data)
-        super(noid, data)
+      def initialize(noid, data, reload = true)
+        super(noid, data, reload)
       end
   end
 end

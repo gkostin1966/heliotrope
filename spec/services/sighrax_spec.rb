@@ -3,6 +3,62 @@
 require 'rails_helper'
 
 RSpec.describe Sighrax do
+  describe '#from_noid_cache' do
+    subject { described_class.from_noid_cache(noid) }
+
+    let(:noid) { 'validnoid' }
+
+    it 'null_entity' do
+      is_expected.to be_an_instance_of(Sighrax::NullEntity)
+      expect(subject.noid).to be noid
+      expect(subject.send(:data)).to be_empty
+    end
+
+    context 'standard error' do
+      before { allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_raise(StandardError) }
+
+      it 'null_entity' do
+        is_expected.to be_an_instance_of(Sighrax::NullEntity)
+        expect(subject.noid).to be noid
+        expect(subject.send(:data)).to be_empty
+      end
+    end
+
+    context 'solr document' do
+      let(:document) { instance_double(SolrDocument, 'document') }
+      let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+      before do
+        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+        allow(described_class).to receive(:from_solr_document).with(document, false).and_return(entity)
+      end
+
+      it 'entity' do
+        is_expected.to be entity
+        expect(described_class).to have_received(:from_solr_document).with(document, false)
+      end
+    end
+
+    context 'stale solr document' do
+      let(:stale_document) { instance_double(SolrDocument, 'stale_document') }
+      let(:stale_entity) { instance_double(Sighrax::Entity, 'stale_entity') }
+      let(:document) { instance_double(SolrDocument, 'document') }
+      let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+      before do
+        allow(described_class).to receive(:from_solr_document).with(stale_document, false).and_return(stale_entity)
+        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+        allow(described_class).to receive(:from_solr_document).with(document, true).and_return(entity)
+      end
+
+      it 'stale entity' do
+        Services.solr_document_cache.write(noid, stale_document)
+        is_expected.to be stale_entity
+        expect(described_class).to have_received(:from_solr_document).with(stale_document, false)
+      end
+    end
+  end
+
   describe '#from_noid' do
     subject { described_class.from_noid(noid) }
 
@@ -30,12 +86,31 @@ RSpec.describe Sighrax do
 
       before do
         allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
-        allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
+        allow(described_class).to receive(:from_solr_document).with(document, true).and_return(entity)
       end
 
-      it 'from_solr_document' do
+      it 'entity' do
         is_expected.to be entity
-        expect(described_class).to have_received(:from_solr_document).with(document)
+        expect(described_class).to have_received(:from_solr_document).with(document, true)
+      end
+    end
+
+    context 'stale solr document' do
+      let(:stale_document) { instance_double(SolrDocument, 'stale_document') }
+      let(:stale_entity) { instance_double(Sighrax::Entity, 'stale_entity') }
+      let(:document) { instance_double(SolrDocument, 'document') }
+      let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+
+      before do
+        allow(described_class).to receive(:from_solr_document).with(stale_document, false).and_return(stale_entity)
+        allow(ActiveFedora::SolrService).to receive(:query).with("{!terms f=id}#{noid}", rows: 1).and_return([document])
+        allow(described_class).to receive(:from_solr_document).with(document, true).and_return(entity)
+      end
+
+      it 'entity' do
+        Services.solr_document_cache.write(noid, stale_document)
+        is_expected.to be entity
+        expect(described_class).to have_received(:from_solr_document).with(document, true)
       end
     end
   end
@@ -46,15 +121,17 @@ RSpec.describe Sighrax do
     let(:presenter) { double('presenter') }
     let(:document) { instance_double(SolrDocument, 'document') }
     let(:entity) { instance_double(Sighrax::Entity, 'entity') }
+    let(:noid) { 'validnoid' }
 
     before do
+      allow(presenter).to receive(:id).and_return(noid)
       allow(presenter).to receive(:solr_document).and_return(document)
-      allow(described_class).to receive(:from_solr_document).with(document).and_return(entity)
+      allow(described_class).to receive(:from_solr_document).with(document, true).and_return(entity)
     end
 
     it 'from_solr_document' do
       is_expected.to be entity
-      expect(described_class).to have_received(:from_solr_document).with(document)
+      expect(described_class).to have_received(:from_solr_document).with(document, true)
     end
   end
 

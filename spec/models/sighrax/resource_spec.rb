@@ -67,4 +67,27 @@ RSpec.describe Sighrax::Resource, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe '#parent' do
+    subject { described_class.send(:new, noid, data, reload) }
+
+    let(:noid) { 'validnoid' }
+    let(:data) { { 'monograph_id_ssim' => [noid] } }
+    let(:reload) { true }
+    let(:parent) { double('parent') }
+    let(:cache_parent) { double('cache_parent') }
+
+    before do
+      allow(Sighrax).to receive(:from_noid).with(noid, true).and_return(parent)
+      allow(Sighrax).to receive(:from_noid).with(noid, false).and_return(cache_parent)
+    end
+
+    it { expect(subject.parent).to be parent }
+
+    context 'cached' do
+      let(:reload) { false }
+
+      it { expect(subject.parent).to be cache_parent }
+    end
+  end
 end

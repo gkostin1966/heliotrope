@@ -17,7 +17,7 @@ RSpec.describe EPubsController, type: :controller do
 
     describe '#show' do
       context 'not found' do
-        let(:presenter) { double('presenter', solr_document: {}) }
+        let(:presenter) { double('presenter', id: 'validnoid', solr_document: {}) }
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])
@@ -111,7 +111,7 @@ RSpec.describe EPubsController, type: :controller do
 
     describe '#file' do
       context 'not found' do
-        let(:presenter) { double('presenter', solr_document: {}) }
+        let(:presenter) { double('presenter', id: 'validnoid', solr_document: {}) }
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).and_return([presenter])

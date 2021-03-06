@@ -21,30 +21,36 @@ require_dependency 'sighrax/work'
 
 module Sighrax # rubocop:disable Metrics/ModuleLength
   class << self
-    def from_noid(noid)
+    def from_noid_cache(noid)
       noid = noid&.to_s
-      data = begin
-        ActiveFedora::SolrService.query("{!terms f=id}#{noid}", rows: 1).first
-      rescue StandardError => _e
-        nil
-      end
-      return Entity.null_entity(noid) if data.blank?
+      solr_document = Services.solr_document_cache.read(noid)
+      return Entity.null_entity(noid) if solr_document.blank?
 
-      from_solr_document(data)
+      from_solr_document(solr_document, false)
     end
 
-    def from_presenter(presenter)
-      from_solr_document(presenter.solr_document)
+    def from_noid(noid, reload = true)
+      noid = noid&.to_s
+      solr_document = Services.solr_document_cache.read(noid, reload)
+      return Entity.null_entity(noid) if solr_document.blank?
+
+      from_solr_document(solr_document, reload)
     end
 
-    def from_solr_document(document)
-      document = document.to_h.with_indifferent_access
+    def from_presenter(presenter, reload = true)
+      Services.solr_document_cache.write(presenter.id, presenter.solr_document)
+      from_solr_document(presenter.solr_document, reload)
+    end
+
+    def from_solr_document(solr_document, reload = true)
+      document = solr_document.to_h.with_indifferent_access
       noid = document['id']
       return Entity.null_entity(noid) unless ValidationService.valid_noid?(noid)
 
       model_type = Array(document['has_model_ssim']).first
       return Entity.send(:new, noid, document) if model_type.blank?
-      model_factory(noid, document, model_type)
+
+      model_factory(noid, document, model_type, reload)
     end
 
     # Greensub Helpers
@@ -219,42 +225,42 @@ module Sighrax # rubocop:disable Metrics/ModuleLength
 
     private
 
-      def model_factory(noid, data, model_type)
+      def model_factory(noid, data, model_type, reload)
         if /^Monograph$/i.match?(model_type)
-          Monograph.send(:new, noid, data)
+          Monograph.send(:new, noid, data, reload)
         elsif /^Score$/i.match?(model_type)
-          Score.send(:new, noid, data)
+          Score.send(:new, noid, data, reload)
         elsif /^FileSet$/i.match?(model_type)
-          file_set_factory(noid, data)
+          file_set_factory(noid, data, reload)
         else
-          Model.send(:new, noid, data)
+          Model.send(:new, noid, data, reload)
         end
       end
 
-      def file_set_factory(noid, data)
+      def file_set_factory(noid, data, reload)
         featured_representative = FeaturedRepresentative.find_by(file_set_id: noid)
         if featured_representative.blank?
-          file_set_resource_type_factory(noid, data)
+          file_set_resource_type_factory(noid, data, reload)
         else
           case featured_representative.kind
           when 'epub'
-            ElectronicPublication.send(:new, noid, data)
+            ElectronicPublication.send(:new, noid, data, reload)
           when 'mobi'
             Mobipocket.send(:new, noid, data)
           when 'pdf_ebook'
-            PortableDocumentFormat.send(:new, noid, data)
+            PortableDocumentFormat.send(:new, noid, data, reload)
           else
-            Asset.send(:new, noid, data)
+            Asset.send(:new, noid, data, reload)
           end
         end
       end
 
-      def file_set_resource_type_factory(noid, data)
+      def file_set_resource_type_factory(noid, data, reload)
         case Array(data['resource_type_tesim']).first
         when /^interactive map$/i
-          InteractiveMap.send(:new, noid, data)
+          InteractiveMap.send(:new, noid, data, reload)
         else
-          Asset.send(:new, noid, data)
+          Asset.send(:new, noid, data, reload)
         end
       end
   end
