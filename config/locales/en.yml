@@ -164,6 +164,7 @@ en:
       previous_edition_html: "Looking for an older version of <i>%{title}</i>?"
       previous_edition: "Looking for an older version of %{title}?"
       read_book: "Read Book"
+      reader_book: "Reader"
       reindex: "Reindex Monograph"
       reindexing: "Reindexing %{title}"
     search:

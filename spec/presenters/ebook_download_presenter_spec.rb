@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EBookDownloadPresenter do
+RSpec.describe EbookDownloadPresenter do
   subject { described_class.new(mono, current_ability, current_actor) }
 
   let(:user) { create(:user) }
