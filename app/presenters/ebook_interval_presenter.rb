@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EBookIntervalPresenter < ApplicationPresenter
+class EbookIntervalPresenter < ApplicationPresenter
   def initialize(args)
     @args = args
   end

@@ -22,7 +22,7 @@ class PDFEbookPresenter < ApplicationPresenter
     @intervals ||= begin
       record = EbookTableOfContentsCache.find_by(noid: @pdf_ebook.id)
       if record.present?
-        JSON.parse(record.toc).map { |i| EBookIntervalPresenter.new(i.symbolize_keys) }
+        JSON.parse(record.toc).map { |i| EbookIntervalPresenter.new(i.symbolize_keys) }
       else
         Rails.logger.error("[FIXME ERROR PDFEbookPresenter: EbookTableOfContentsCache] No Cached TOC for #{@pdf_ebook.id}")
         @pdf_ebook.intervals.map { |interval| RemoveMeEPubIntervalPresenter.new(interval) }

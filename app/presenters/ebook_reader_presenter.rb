@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EBookDownloadPresenter < ApplicationPresenter
+class EbookReaderPresenter < ApplicationPresenter
   include ActionView::Helpers::UrlHelper
   attr_reader :monograph, :current_ability, :current_actor, :ebook_presenters
 
@@ -34,32 +34,16 @@ class EBookDownloadPresenter < ApplicationPresenter
     @ebook_presenters.map { |ebook| ebook if ebook.pdf_ebook? }.compact.first
   end
 
-  def downloadable?(ebook_presenter)
-    Rails.logger.debug("[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})")
+  def readerable?(ebook_presenter)
+    Rails.logger.debug("[EBOOK READER] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})")
     return false if ebook_presenter.blank?
-    EntityPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).download?
+    EbookPolicy.new(current_actor, Sighrax.from_presenter(ebook_presenter)).reader?
   end
 
-  def downloadable_ebooks?
+  def readerable_ebooks?
     @ebook_presenters.each do |ebook|
-      return true if downloadable?(ebook)
+      return true if readerable?(ebook)
     end
     false
-  end
-
-  def csb_download_links
-    links = []
-
-    @ebook_presenters.each do |ebook|
-      next unless downloadable?(ebook)
-
-      links << {
-        format: ebook.ebook_format,
-        size: ActiveSupport::NumberHelper.number_to_human_size(ebook.file_size),
-        href: Rails.application.routes.url_helpers.download_ebook_path(ebook.id)
-      }
-    end
-
-    links
   end
 end

@@ -23,7 +23,7 @@ class EPubPresenter < ApplicationPresenter
       record = EbookTableOfContentsCache.find_by(noid: @epub.id)
       if record.present?
         JSON.parse(record.toc).map do |i|
-          EBookIntervalPresenter.new(i.symbolize_keys)
+          EbookIntervalPresenter.new(i.symbolize_keys)
         end
       else
         Rails.logger.error("[FIXME ERROR EPubPresenter: EbookTableOfContentsCache] No Cached TOC for #{@epub.id}")
