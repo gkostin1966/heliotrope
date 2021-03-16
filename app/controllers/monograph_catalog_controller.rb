@@ -85,7 +85,8 @@ class MonographCatalogController < ::CatalogController
       @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       @monograph_policy = MonographPolicy.new(current_actor, Sighrax.from_presenter(@presenter))
       @press_policy = PressPolicy.new(current_actor, Press.find_by(subdomain: @presenter.subdomain))
-      @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+      @ebook_reader_presenter = EbookReaderPresenter.new(@presenter, current_ability, current_actor)
+      @ebook_download_presenter = EbookDownloadPresenter.new(@presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
       @actor_product_ids = Sighrax.actor_products(current_actor).pluck(:id)
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)

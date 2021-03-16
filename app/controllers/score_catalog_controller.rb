@@ -35,7 +35,7 @@ class ScoreCatalogController < ::CatalogController
       score_id = params[:score_id] || params[:id]
       raise CanCan::AccessDenied unless current_ability&.can?(:read, score_id)
       @presenter = Hyrax::PresenterFactory.build_for(ids: [score_id], presenter_class: Hyrax::ScorePresenter, presenter_args: current_ability).first
-      @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+      @ebook_download_presenter = EbookDownloadPresenter.new(@presenter, current_ability, current_actor)
     end
 
     def load_stats

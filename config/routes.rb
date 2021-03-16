@@ -149,6 +149,20 @@ Rails.application.routes.draw do
   resources :ebooks, only: [] do
     member do
       get :download
+      get :reader
+    end
+  end
+
+  resources :epub_ebooks, only: :show do
+    member do
+      get :download
+    end
+  end
+
+  resources :pdf_ebooks, only: :show do
+    member do
+      get :download
+      get :file
     end
   end
 

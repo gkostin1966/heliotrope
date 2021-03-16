@@ -22,7 +22,7 @@ class EPubsController < CheckpointController
                  else
                    @presenter.parent.catalog_url
                  end
-    @ebook_download_presenter = EBookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
+    @ebook_download_presenter = EbookDownloadPresenter.new(@parent_presenter, current_ability, current_actor)
 
     @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '') if @entity.is_a?(Sighrax::ElectronicPublication)
 
